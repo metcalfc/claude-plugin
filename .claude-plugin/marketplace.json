@@ -1,9 +1,18 @@
 {
+  "name": "chad-tools-marketplace",
+  "owner": {
+    "name": "Chad Metcalf",
+    "email": "chad@metcalfc.com"
+  },
   "plugins": [
     {
       "name": "chad-tools",
+      "source": ".",
       "description": "Chad's personal Claude Code skills and workflows",
-      "path": "."
+      "version": "1.0.0",
+      "author": {
+        "name": "Chad Metcalf"
+      }
     }
   ]
 }

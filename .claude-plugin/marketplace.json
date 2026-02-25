@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "chad-tools",
-      "source": ".",
+      "source": "./plugins/chad-tools",
       "description": "Chad's personal Claude Code skills and workflows",
       "version": "1.0.0",
       "author": {

@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "chad-tools",
+      "description": "Chad's personal Claude Code skills and workflows",
+      "path": "."
+    }
+  ]
+}

@@ -16,6 +16,7 @@ In Claude Code:
 - `/gen-script` — Generate standalone bash/python/JS scripts
 - `/crystallize` — Turn a repeated pattern into a new skill
 - `/protect-branch` — Add branch protection hooks to a repo
+- `/resolve-reviews` — Reply to PR review comments and resolve conversations
 
 ## Adding skills
 

@@ -5,10 +5,13 @@ description: This skill should be used when Claude attempts a gh CLI operation
   "unknown command" errors from gh, or when the user asks about GitHub
   operations that require `gh api` directly. Common triggers include questions
   about "milestones", "branch protection", "repo topics", "autolinks",
-  "deploy keys", "webhooks", "environments", "repository rulesets", or
-  "repository settings". Also applies when the user asks "how do I create a
-  milestone with gh", "set up branch protection", "add deploy key to repo",
-  "configure webhooks", or "manage GitHub environments from CLI".
+  "deploy keys", "webhooks", "environments", "repository rulesets",
+  "repository settings", "collaborators", "repo access", "traffic",
+  "repo analytics", "notifications", "GitHub Pages", "actions permissions",
+  or "GITHUB_TOKEN permissions". Also applies when the user asks "how do I
+  create a milestone with gh", "add a collaborator", "check repo traffic",
+  "manage notifications", "set up GitHub Pages", "configure actions
+  permissions", or "restrict allowed actions".
 ---
 
 # gh API Recipes
@@ -64,6 +67,11 @@ gh api repos/:owner/:repo/milestones --paginate --jq '.[] | .title'
 Detailed recipes are in the `references/` directory. Consult these when the user needs help with a specific operation:
 
 - **`references/milestones.md`** — Create, list, update, close, delete milestones; assign issues to milestones
+- **`references/collaborators.md`** — Add/remove collaborators, permissions, invitations, team access
+- **`references/traffic.md`** — Views, clones, referrers, popular paths (14-day retention)
+- **`references/notifications.md`** — List, mark read, subscribe/unsubscribe, watch repos
+- **`references/pages.md`** — Enable/disable Pages, source config, custom domains, build status
+- **`references/actions-permissions.md`** — Actions enable/disable, allowed actions, GITHUB_TOKEN permissions, runners
 - **`references/repo-settings.md`** — Topics, autolinks, deploy keys, branch protection, rulesets, webhooks, environments, repository visibility
 
 When an operation isn't covered by an existing recipe, construct the `gh api` call from the [GitHub REST API docs](https://docs.github.com/en/rest). The pattern is consistent: identify the endpoint, use `gh api` with the right HTTP method and fields.

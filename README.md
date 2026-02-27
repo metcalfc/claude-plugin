@@ -43,7 +43,8 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 
 ### Commands
 
-- `/gh-recipes:add <description>` — File an issue to request a new recipe
+- `/gh-recipes:add <description>` — Request a new recipe
+- `/gh-recipes:issue <what went wrong>` — Report a bug (gathers context, sanitizes, you review before filing)
 
 ---
 
@@ -58,7 +59,9 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 | `/crystallize` | Turn a repeated pattern into a new skill |
 | `/protect-branch` | Add branch protection hooks to a repo |
 | `/resolve-reviews` | Reply to PR review comments and resolve conversations |
-| `/chad-tools:add` | File an issue to request a new skill |
+| `/chad-tools:audit-plugins` | Run a review/test cycle on gh-recipes and exe-dev |
+| `/chad-tools:add` | Request a new skill |
+| `/chad-tools:issue` | Report a bug (gathers context, sanitizes, you review before filing) |
 
 ---
 
@@ -71,13 +74,14 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 | `/exe-ls` | List VMs with status |
 | `/exe-new` | Create a new VM |
 | `/exe-share` | Share a VM |
-| `/exe-dev:add` | File an issue to request a new feature |
+| `/exe-dev:add` | Request a new feature |
+| `/exe-dev:issue` | Report a bug (gathers context, sanitizes, you review before filing) |
 
 ---
 
 ## Contributing
 
-Every plugin has an `/add` command that files an issue on this repo. If Claude can't do something you expected, just run it:
+Every plugin has `/add` and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, and you review before anything gets filed.
 
 ```
 /gh-recipes:add Add support for managing GitHub Projects V2 via GraphQL

@@ -4,17 +4,27 @@ A collection of Claude Code plugins for everyday dev workflows. Install one, all
 
 ## Install
 
+Add the marketplace and install the plugins you want. Works from the terminal or inside Claude Code:
+
+**From the terminal:**
+
+```bash
+claude plugin marketplace add metcalfc/claude-plugin
+claude plugin install gh-recipes
+claude plugin install chad-tools
+claude plugin install exe-dev
+```
+
+**Inside Claude Code (slash commands):**
+
 ```
 /plugin marketplace add metcalfc/claude-plugin
-```
-
-Then install the plugins you want:
-
-```
-/plugin install chad-tools
 /plugin install gh-recipes
+/plugin install chad-tools
 /plugin install exe-dev
 ```
+
+Install one, all, or pick and choose — they're independent.
 
 ---
 

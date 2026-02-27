@@ -35,7 +35,21 @@ Before showing the draft to the user, scrub ALL of the following from the issue 
 - Environment variable values (keep the key names, redact values)
 - Branch names if they contain sensitive project info (ask if unsure)
 
-## Step 3: Draft and review
+## Step 3: Check for duplicates
+
+Before drafting, search for existing open bug reports:
+
+```bash
+gh issue list --repo metcalfc/claude-plugin --label "chad-tools,bug" --state open --json number,title --jq '.[] | "#\(.number) \(.title)"'
+```
+
+If any existing issue looks related, show the user the matches and ask:
+
+- **File anyway** — the bug is different
+- **Add a comment** — add context to the existing issue instead
+- **Skip** — already reported
+
+## Step 4: Draft and review
 
 Present the full issue title and body to the user using AskUserQuestion with options:
 
@@ -44,7 +58,7 @@ Present the full issue title and body to the user using AskUserQuestion with opt
 
 Do NOT file the issue until the user explicitly approves.
 
-## Step 4: File the issue
+## Step 5: File the issue
 
 ```bash
 gh label create chad-tools --repo metcalfc/claude-plugin --description "chad-tools plugin" --color 0075ca 2>/dev/null

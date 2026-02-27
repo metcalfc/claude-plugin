@@ -53,8 +53,12 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 
 ### Commands
 
+- `/gh-recipes:list` — Show all available recipes
 - `/gh-recipes:add <description>` — Request a new recipe
 - `/gh-recipes:issue <what went wrong>` — Report a bug (gathers context, sanitizes, you review before filing)
+- `/gh-recipes:help` — Plugin help
+
+Also includes a **PostToolUse hook** that automatically detects `gh` "unknown command" errors and nudges toward the right recipe.
 
 ---
 
@@ -72,6 +76,7 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 | `/chad-tools:audit-plugins` | Run a review/test cycle on gh-recipes and exe-dev |
 | `/chad-tools:add` | Request a new skill |
 | `/chad-tools:issue` | Report a bug (gathers context, sanitizes, you review before filing) |
+| `/chad-tools:help` | Plugin help |
 
 ---
 
@@ -84,14 +89,16 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 | `/exe-ls` | List VMs with status |
 | `/exe-new` | Create a new VM |
 | `/exe-share` | Share a VM |
+| `/exe-dev:status` | Quick health check of all VMs |
 | `/exe-dev:add` | Request a new feature |
 | `/exe-dev:issue` | Report a bug (gathers context, sanitizes, you review before filing) |
+| `/exe-dev:help` | Plugin help |
 
 ---
 
 ## Contributing
 
-Every plugin has `/add` and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, and you review before anything gets filed.
+Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, duplicate issues are checked, and you review before anything gets filed.
 
 ```
 /gh-recipes:add Add support for managing GitHub Projects V2 via GraphQL

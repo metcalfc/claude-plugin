@@ -1,0 +1,17 @@
+{
+  "description": "Detect gh CLI errors and suggest recipes",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the Bash tool result contains a GitHub CLI (gh) error indicating an unknown or missing subcommand. Look for patterns like 'unknown command', 'is not a gh command', or failed gh commands that could be accomplished with `gh api`. If you find such an error, return a systemMessage suggesting the user has the gh-recipes plugin which may have a recipe for this operation. If the output is not a gh error or is a successful command, return nothing. Do NOT block or modify execution.",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

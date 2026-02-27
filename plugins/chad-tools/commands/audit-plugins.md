@@ -1,7 +1,7 @@
 ---
 name: audit-plugins
-description: Review and test gh-recipes and exe-dev plugins for accuracy
-argument-hint: "[gh-recipes|exe-dev|all]"
+description: Review and test gh-recipes, exe-dev, and fzf-power plugins for accuracy
+argument-hint: "[gh-recipes|exe-dev|fzf-power|all]"
 allowed-tools:
   - Bash
   - Read
@@ -11,7 +11,7 @@ allowed-tools:
   - Task
 ---
 
-Run a review and test cycle on the gh-recipes and exe-dev plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
+Run a review and test cycle on the gh-recipes, exe-dev, and fzf-power plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
 
 ## Workflow
 
@@ -77,4 +77,21 @@ Present a summary table:
 - [specific items to update or add]
 ```
 
-If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add`.
+### 7. Test fzf-power
+
+If fzf-power is in scope:
+
+1. Check `fzf --version` to verify fzf is installed
+2. Verify the skill's minimum template works:
+   ```bash
+   echo -e "test1\ntest2\ntest3" | fzf --version
+   ```
+3. Test that `--preview` works: run a quick fzf invocation with `--filter=test1` (non-interactive) to verify options are accepted
+4. Check if any referenced fzf options have been deprecated by checking `fzf --help` output
+5. Verify theme color names are still valid
+
+Report fzf-power results in the same table format.
+
+### 8. Recommended Actions
+
+If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add` or `/fzf-power:add`.

@@ -13,6 +13,7 @@ claude plugin marketplace add metcalfc/claude-plugin
 claude plugin install gh-recipes
 claude plugin install chad-tools
 claude plugin install exe-dev
+claude plugin install fzf-power
 ```
 
 **Inside Claude Code (slash commands):**
@@ -22,6 +23,7 @@ claude plugin install exe-dev
 /plugin install gh-recipes
 /plugin install chad-tools
 /plugin install exe-dev
+/plugin install fzf-power
 ```
 
 Install one, all, or pick and choose — they're independent.
@@ -96,6 +98,31 @@ Also includes a **PostToolUse hook** that automatically detects `gh` "unknown co
 
 ---
 
+## fzf-power
+
+**Teaches Claude to use fzf's full capabilities instead of bare `| fzf`.**
+
+Without this plugin, Claude writes `something | fzf` and calls it a day. With it, every fzf invocation gets preview windows, keybindings, headers, proper formatting, and theming. The skill auto-activates whenever Claude writes an interactive script.
+
+### What it teaches
+
+| Capability | What Claude learns |
+|------------|-------------------|
+| **Preview windows** | `--preview` with context-appropriate commands (bat for files, git show for commits, docker inspect for containers) |
+| **Keybindings** | `--bind` actions: reload, become, execute, mode switching, preview cycling |
+| **Theming** | `--color` with 8 built-in themes (Gruvbox, Catppuccin, Tokyo Night, Nord, Dracula, One Dark, Solarized, Rose Pine) |
+| **Advanced patterns** | Ripgrep launcher, bidirectional mode toggle, state switching, live reload |
+| **Real-world recipes** | Git branch picker, commit browser, docker management, k8s pod browser, process killer, file browser |
+
+### Commands
+
+- `/fzf-power:theme` — Browse and apply fzf color themes to your shell profile
+- `/fzf-power:add <description>` — Request a new recipe or pattern
+- `/fzf-power:issue <what went wrong>` — Report a bug
+- `/fzf-power:help` — Plugin help
+
+---
+
 ## Contributing
 
 Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, duplicate issues are checked, and you review before anything gets filed.
@@ -104,6 +131,7 @@ Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or re
 /gh-recipes:add Add support for managing GitHub Projects V2 via GraphQL
 /chad-tools:add Add a skill for managing git stashes
 /exe-dev:add Add support for VM snapshots
+/fzf-power:add Add a recipe for browsing AWS S3 buckets
 ```
 
 Or open an issue directly at [github.com/metcalfc/claude-plugin/issues](https://github.com/metcalfc/claude-plugin/issues).

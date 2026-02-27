@@ -31,6 +31,15 @@
       "author": {
         "name": "Chad Metcalf"
       }
+    },
+    {
+      "name": "fzf-power",
+      "source": "./plugins/fzf-power",
+      "description": "Teaches Claude to use fzf's full power — preview windows, keybindings, theming, and advanced patterns instead of bare | fzf",
+      "version": "0.1.0",
+      "author": {
+        "name": "Chad Metcalf"
+      }
     }
   ]
 }

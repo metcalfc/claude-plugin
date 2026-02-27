@@ -8,10 +8,15 @@ description: This skill should be used when Claude attempts a gh CLI operation
   "deploy keys", "webhooks", "environments", "repository rulesets",
   "repository settings", "collaborators", "repo access", "traffic",
   "repo analytics", "notifications", "GitHub Pages", "actions permissions",
-  or "GITHUB_TOKEN permissions". Also applies when the user asks "how do I
+  "GITHUB_TOKEN permissions", "commit statuses", "interaction limits",
+  "repository dispatch", "dependabot alerts", "resolve review threads",
+  or "resolve conversations". Also applies when the user asks "how do I
   create a milestone with gh", "add a collaborator", "check repo traffic",
   "manage notifications", "set up GitHub Pages", "configure actions
-  permissions", or "restrict allowed actions".
+  permissions", "restrict allowed actions", "post a commit status",
+  "lock down repo interactions", "trigger a repository dispatch",
+  "list dependabot alerts", "dismiss dependabot alert", or "resolve PR
+  review conversations".
 ---
 
 # gh API Recipes
@@ -72,6 +77,11 @@ Detailed recipes are in the `references/` directory. Consult these when the user
 - **`references/notifications.md`** — List, mark read, subscribe/unsubscribe, watch repos
 - **`references/pages.md`** — Enable/disable Pages, source config, custom domains, build status
 - **`references/actions-permissions.md`** — Actions enable/disable, allowed actions, GITHUB_TOKEN permissions, runners
+- **`references/commit-statuses.md`** — Create/read legacy commit statuses for CI integrations
+- **`references/interaction-limits.md`** — Temporarily restrict repo interactions (spam control)
+- **`references/repository-dispatch.md`** — Trigger custom events for cross-repo automation
+- **`references/dependabot.md`** — List, dismiss, reopen Dependabot vulnerability alerts
+- **`references/review-threads.md`** — Resolve/unresolve PR review conversations, reply to threads (GraphQL)
 - **`references/repo-settings.md`** — Topics, autolinks, deploy keys, branch protection, rulesets, webhooks, environments, repository visibility
 
 When an operation isn't covered by an existing recipe, construct the `gh api` call from the [GitHub REST API docs](https://docs.github.com/en/rest). The pattern is consistent: identify the endpoint, use `gh api` with the right HTTP method and fields.

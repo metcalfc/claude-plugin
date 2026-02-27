@@ -22,6 +22,15 @@
       "author": {
         "name": "Chad Metcalf"
       }
+    },
+    {
+      "name": "gh-recipes",
+      "source": "./plugins/gh-recipes",
+      "description": "Recipes for gh CLI operations that don't have built-in subcommands (milestones, branch protection, webhooks, etc.)",
+      "version": "0.1.0",
+      "author": {
+        "name": "Chad Metcalf"
+      }
     }
   ]
 }

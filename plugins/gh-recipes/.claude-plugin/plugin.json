@@ -1,0 +1,6 @@
+{
+  "name": "gh-recipes",
+  "version": "0.1.0",
+  "description": "Recipes for gh CLI operations that don't have built-in subcommands",
+  "repository": "https://github.com/metcalfc/claude-plugin"
+}

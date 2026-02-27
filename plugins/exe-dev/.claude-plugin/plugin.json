@@ -1,0 +1,5 @@
+{
+  "name": "exe-dev",
+  "version": "0.1.0",
+  "description": "exe.dev VM management — SSH CLI, HTTP proxy, sharing, and Shelley integration"
+}

@@ -45,9 +45,27 @@ gh issue list --repo metcalfc/claude-plugin --label "chad-tools,bug" --state ope
 
 If any existing issue looks related, show the user the matches and ask:
 
-- **File anyway** — the bug is different
-- **Add a comment** — add context to the existing issue instead
-- **Skip** — already reported
+- **File anyway** — the bug is different enough to warrant a new issue
+- **Add a comment** — post a comment on the existing issue with this new context
+- **Skip** — already reported, nothing to add
+
+If the user picks **Add a comment**, post a comment on the matching issue using the sanitized context from Step 2. Frame it as potentially related, not definitively the same:
+
+```bash
+gh issue comment ISSUE_NUMBER --repo metcalfc/claude-plugin --body "<comment>"
+```
+
+The comment format:
+
+```markdown
+This might be related — I hit something similar:
+
+<sanitized description of what happened, the command that failed, and the error>
+
+Let me know if this is a separate issue and I'll file one.
+```
+
+Show the user the draft comment for approval before posting, same as with new issues.
 
 ## Step 4: Draft and review
 

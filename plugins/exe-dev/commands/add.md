@@ -21,8 +21,27 @@ gh issue list --repo metcalfc/claude-plugin --label "exe-dev" --state open --jso
 
 If any existing issue looks related, show the user the matches and ask:
 
-- **File anyway** — the request is different enough
+- **File anyway** — the request is different enough to warrant a new issue
+- **Add a comment** — add a "+1" or extra context to the existing issue
 - **Skip** — an existing issue already covers it
+
+If the user picks **Add a comment**, post a comment on the matching issue:
+
+```bash
+gh issue comment ISSUE_NUMBER --repo metcalfc/claude-plugin --body "<comment>"
+```
+
+The comment format:
+
+```markdown
+This might be related — I also ran into this:
+
+<brief description of what the user tried and what was missing>
+
+Adding context in case it helps.
+```
+
+Show the user the draft comment for approval before posting.
 
 ## Step 2: File the issue
 

@@ -13,9 +13,16 @@ description: >-
 
 # exe.dev Platform Knowledge
 
-exe.dev is a subscription VM service. SSH **is** the CLI — there is no binary to install. All management commands run as `ssh exe.dev <command>`.
+exe.dev is a subscription VM service. SSH **is** the CLI — there is no binary to install. VMs get persistent disks, instant HTTPS, and built-in auth.
 
-VMs are accessible at `<vmname>.exe.xyz` via SSH and HTTPS.
+## Documentation
+
+Upstream docs for the latest information:
+
+- Docs index: https://exe.dev/docs.md
+- All docs in one page: https://exe.dev/docs/all.md
+
+The reference below covers the full platform. If something seems outdated, fetch the upstream docs.
 
 ## Core Concepts
 
@@ -25,7 +32,16 @@ VMs are accessible at `<vmname>.exe.xyz` via SSH and HTTPS.
 - VMs share CPU/RAM within subscription tier
 - No dedicated public IP — exe.dev terminates TLS and proxies traffic
 
-## SSH CLI Reference
+## Two SSH Destinations
+
+This is the most important concept. There are two distinct SSH targets:
+
+1. **`ssh exe.dev <command>`** — the **lobby**. A management interface for VM lifecycle, sharing, and configuration. Does not support scp, sftp, or arbitrary shell commands.
+2. **`ssh <vmname>.exe.xyz`** — a **direct VM connection**. Full SSH: shell, scp, sftp, port forwarding, everything.
+
+Never mix these up. `scp` and `sftp` only work against `<vmname>.exe.xyz`, not `exe.dev`.
+
+## SSH CLI Reference (Lobby)
 
 All commands use the pattern `ssh exe.dev <command> [args]`. Append `--json` to `ls` and `new` for machine-readable output.
 
@@ -42,15 +58,7 @@ ssh exe.dev rename <old> <new>               # rename VM
 ssh exe.dev cp <source> <dest>               # clone VM with disk
 ```
 
-### Connecting to VMs
-
-```
-ssh <vmname>.exe.xyz                         # SSH into VM
-scp <localfile> <vmname>.exe.xyz:            # copy file to VM
-scp <vmname>.exe.xyz:<remote> <local>        # copy file from VM
-```
-
-### Other Commands
+### Other Lobby Commands
 
 ```
 ssh exe.dev whoami                           # show account info
@@ -60,6 +68,25 @@ ssh exe.dev browser <vmname>                 # open VM in browser
 ssh exe.dev help                             # show help
 ssh exe.dev doc                              # show docs
 ```
+
+## Connecting to VMs (Direct)
+
+Target `<vmname>.exe.xyz` for shell access and file transfer:
+
+```
+ssh <vmname>.exe.xyz                         # SSH into VM
+scp <localfile> <vmname>.exe.xyz:            # copy file to VM
+scp <vmname>.exe.xyz:<remote> <local>        # copy file from VM
+```
+
+## Non-Interactive & Agent Environments
+
+Coding agents and sandboxed environments hit common SSH pitfalls:
+
+- **Hung connections**: Non-interactive SSH blocks on host key prompts with no visible output. Use `-o StrictHostKeyChecking=accept-new` on first connection to a new VM.
+- **scp/sftp failures**: Ensure you target `<vmname>.exe.xyz`, not `exe.dev`. The lobby does not support file transfer.
+- **SSH config**: Both destinations must be configured to use the right key (see SSH Configuration below).
+- **JSON output**: Use `--json` with `ls` and `new` for machine-parseable output instead of scraping text.
 
 ## HTTP Proxy
 

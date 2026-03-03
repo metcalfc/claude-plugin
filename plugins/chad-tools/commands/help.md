@@ -17,6 +17,7 @@ SKILLS (auto-activate based on context):
   resolve-reviews     Reply to PR review comments and resolve conversations
 
 COMMANDS:
+  /chad-tools:pick-next      Prioritize open issues and launch worktrees
   /chad-tools:audit-plugins  Review/test gh-recipes and exe-dev for accuracy
   /chad-tools:add            Request a new skill (files an issue)
   /chad-tools:issue          Report a bug (gathers context, you review before filing)

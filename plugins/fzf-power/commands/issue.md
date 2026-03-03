@@ -26,13 +26,15 @@ Use the user's description and recent conversation context to fill in what went 
 
 Before showing the draft to the user, scrub ALL of the following from the issue body:
 
-- API tokens, passwords, secrets, credentials
+- SSH keys, API tokens, passwords, secrets, credentials
 - IP addresses (replace with `<redacted-ip>`)
 - Email addresses not already public on GitHub (replace with `<redacted-email>`)
 - Private repo names or org names if not the plugin repo itself
 - Hostnames of internal/private systems
-- File paths containing usernames (replace `/Users/username/` with `~/`)
+- VM hostnames like `*.exe.xyz` (replace with `<vm>.exe.xyz`)
+- File paths containing usernames (replace `/Users/username/` or `/home/username/` with `~/`)
 - Environment variable values (keep the key names, redact values)
+- Branch names if they contain sensitive project info (ask if unsure)
 
 ## Step 3: Check for duplicates
 

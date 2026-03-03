@@ -28,10 +28,12 @@ Before showing the draft to the user, scrub ALL of the following from the issue 
 - SSH keys, API tokens, passwords, secrets, credentials
 - IP addresses (replace with `<redacted-ip>`)
 - Email addresses not already public on GitHub (replace with `<redacted-email>`)
-- Private hostnames or internal system names
-- File paths containing usernames (replace `/Users/username/` with `~/`)
-- VM names if the user considers them private (ask if unsure)
+- Private repo names or org names if not the plugin repo itself
+- Hostnames of internal/private systems
+- VM hostnames like `*.exe.xyz` (replace with `<vm>.exe.xyz`)
+- File paths containing usernames (replace `/Users/username/` or `/home/username/` with `~/`)
 - Environment variable values (keep the key names, redact values)
+- Branch names if they contain sensitive project info (ask if unsure)
 
 ## Step 3: Check for duplicates
 

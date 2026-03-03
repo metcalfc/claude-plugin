@@ -84,17 +84,36 @@ Also includes a **PostToolUse hook** that automatically detects `gh` "unknown co
 
 ## exe-dev
 
-**[exe.dev](https://exe.dev) VM management via SSH CLI.**
+**Teaches Claude the [exe.dev](https://exe.dev) platform — instant Linux VMs managed entirely over SSH.**
 
-| Command | What it does |
-|---------|-------------|
-| `/exe-ls` | List VMs with status |
-| `/exe-new` | Create a new VM |
-| `/exe-share` | Share a VM |
-| `/exe-dev:status` | Quick health check of all VMs |
-| `/exe-dev:add` | Request a new feature |
-| `/exe-dev:issue` | Report a bug (gathers context, sanitizes, you review before filing) |
-| `/exe-dev:help` | Plugin help |
+Without this plugin, Claude doesn't know that `ssh exe.dev new` creates a VM, that `scp` targets `<vm>.exe.xyz` (not `exe.dev`), or that every VM gets automatic HTTPS. With it, Claude understands the full platform and can work with your VMs autonomously. The skill auto-activates when you mention exe.dev, VMs, or anything `*.exe.xyz`.
+
+### Platform knowledge
+
+| Area | What Claude knows |
+|------|-------------------|
+| **Two SSH destinations** | The lobby (`ssh exe.dev`) for management vs direct VM access (`ssh <vm>.exe.xyz`) — and when to use which |
+| **VM lifecycle** | Create, list, restart, rename, clone, delete VMs |
+| **File transfer** | `scp`/`sftp` to the right destination, not the lobby |
+| **HTTP proxy & TLS** | Automatic HTTPS at `<vm>.exe.xyz`, port forwarding 3000-9999, proxy headers, auth URLs |
+| **Sharing & access** | Public/private, email invites, share links, per-port control |
+| **Custom domains** | CNAME/ALIAS setup with automatic TLS |
+| **LLM gateway** | Built-in proxy to Anthropic, OpenAI, Fireworks — no API keys on VMs |
+| **Email** | Send/receive via the internal gateway |
+| **Shelley** | Web-based coding agent on every VM, guidance files, upgrades |
+| **Agent-safe SSH** | Host key prompts, non-interactive pitfalls, `--json` output for machine parsing |
+
+### Commands
+
+Convenience shortcuts — the skill handles most things automatically, but these are handy for quick operations:
+
+- `/exe-ls` — List VMs with status
+- `/exe-new` — Create a new VM
+- `/exe-share` — Share a VM
+- `/exe-dev:status` — Quick health check of all VMs
+- `/exe-dev:add` — Request a new feature
+- `/exe-dev:issue` — Report a bug
+- `/exe-dev:help` — Plugin help
 
 ---
 

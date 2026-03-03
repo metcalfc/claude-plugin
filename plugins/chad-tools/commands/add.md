@@ -43,7 +43,21 @@ Adding context in case it helps.
 
 Show the user the draft comment for approval before posting.
 
-## Step 2: File the issue
+## Step 2: Sanitize
+
+Before drafting, scrub the request body of anything sensitive:
+
+- SSH keys, API tokens, passwords, secrets, credentials
+- IP addresses (replace with `<redacted-ip>`)
+- Email addresses not already public on GitHub (replace with `<redacted-email>`)
+- Private repo names or org names if not the plugin repo itself
+- Hostnames of internal/private systems
+- VM hostnames like `*.exe.xyz` (replace with `<vm>.exe.xyz`)
+- File paths containing usernames (replace `/Users/username/` or `/home/username/` with `~/`)
+- Environment variable values (keep the key names, redact values)
+- Branch names if they contain sensitive project info (ask if unsure)
+
+## Step 3: File the issue
 
 ```bash
 gh label create chad-tools --repo metcalfc/claude-plugin --description "chad-tools plugin" --color 0075ca 2>/dev/null

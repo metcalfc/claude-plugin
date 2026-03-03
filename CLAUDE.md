@@ -51,7 +51,8 @@ Flow:
    - **Add a comment** — post a "might be related" comment on existing issue
    - **Skip** — already covered
 3. If adding a comment, draft it as "This might be related — I also ran into this: ..." and show for approval before posting
-4. **File the issue** — create label if needed, then `gh issue create --repo metcalfc/claude-plugin --label "<plugin-name>,enhancement"`
+4. **Sanitize** — apply the standard sanitization rules (see below) before drafting
+5. **File the issue** — create label if needed, then `gh issue create --repo metcalfc/claude-plugin --label "<plugin-name>,enhancement"`
 
 ### `/issue` Command Pattern
 
@@ -69,7 +70,7 @@ allowed-tools:
 
 Flow:
 1. **Gather context** — version info, OS, the command that failed, error output
-2. **Sanitize** — scrub tokens, IPs, emails, private repo names, file paths with usernames (replace `/Users/username/` with `~/`), env var values
+2. **Sanitize** — apply the standard sanitization rules (see below)
 3. **Check for duplicates** — same as `/add` but with `--label "<plugin-name>,bug"`
 4. **Draft and review** — show full issue to user via AskUserQuestion, options: "File it" or "Edit first"
 5. **File the issue** — only after explicit user approval
@@ -127,6 +128,24 @@ When adding a new plugin, add an entry to `.claude-plugin/marketplace.json`:
 - Skill directories: kebab-case (`fzf-mastery`, `gh-api-recipes`)
 - Reference files: kebab-case `.md` (`bind-actions.md`, `repo-settings.md`)
 - Labels for issues: match plugin name (`fzf-power`, `gh-recipes`, `chad-tools`, `exe-dev`)
+
+### Sanitization Rules
+
+**Every command that files or comments on a GitHub issue** (`/add`, `/issue`, or any future command) MUST scrub the body before drafting. This applies to issue bodies, comments, and any text posted to GitHub.
+
+Scrub ALL of the following:
+
+- SSH keys, API tokens, passwords, secrets, credentials
+- IP addresses (replace with `<redacted-ip>`)
+- Email addresses not already public on GitHub (replace with `<redacted-email>`)
+- Private repo names or org names if not the plugin repo itself
+- Hostnames of internal/private systems
+- VM hostnames like `*.exe.xyz` (replace with `<vm>.exe.xyz`)
+- File paths containing usernames (replace `/Users/username/` or `/home/username/` with `~/`)
+- Environment variable values (keep the key names, redact values)
+- Branch names if they contain sensitive project info (ask if unsure)
+
+This list is the canonical source. When adding a new plugin, copy these rules into both `add.md` and `issue.md`. When updating the list, update all existing plugins too.
 
 ### Issue Filing
 

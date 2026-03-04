@@ -1,7 +1,7 @@
 ---
 name: audit-plugins
-description: Review and test gh-recipes, exe-dev, and fzf-power plugins for accuracy
-argument-hint: "[gh-recipes|exe-dev|fzf-power|all]"
+description: Review and test gh-recipes, exe-dev, fzf-power, and zsh-craft plugins for accuracy
+argument-hint: "[gh-recipes|exe-dev|fzf-power|zsh-craft|all]"
 allowed-tools:
   - Bash
   - Read
@@ -11,7 +11,7 @@ allowed-tools:
   - Task
 ---
 
-Run a review and test cycle on the gh-recipes, exe-dev, and fzf-power plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
+Run a review and test cycle on the gh-recipes, exe-dev, fzf-power, and zsh-craft plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
 
 ## Workflow
 
@@ -92,6 +92,33 @@ If fzf-power is in scope:
 
 Report fzf-power results in the same table format.
 
-### 8. Recommended Actions
+### 8. Test zsh-craft
 
-If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add` or `/fzf-power:add`.
+If zsh-craft is in scope:
+
+1. Check `zsh --version` to verify zsh is installed
+2. Test a few core zsh features the skill teaches:
+   ```bash
+   zsh -c 'print -P "%F{green}print -P works%f"'
+   zsh -c 'zmodload zsh/datetime; print $EPOCHSECONDS'
+   zsh -c 'typeset -A m=(a 1 b 2); print ${(k)m}'
+   ```
+3. Verify parameter expansion examples from the reference files are syntactically correct by running a sample:
+   ```bash
+   zsh -c 'str="hello world"; print ${(U)str}'
+   zsh -c 'arr=(c a b a); print ${(uo)arr}'
+   ```
+4. Check that zparseopts examples work:
+   ```bash
+   zsh -c 'zparseopts -D -F -- h=help v=verbose; print "ok"' -- -h -v
+   ```
+5. Verify glob qualifier syntax with a simple test:
+   ```bash
+   zsh -c 'setopt EXTENDED_GLOB; print -l *.md(N.om[1,3])' 2>/dev/null
+   ```
+
+Report zsh-craft results in the same table format.
+
+### 9. Recommended Actions
+
+If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add`, `/fzf-power:add`, or `/zsh-craft:add`.

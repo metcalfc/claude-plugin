@@ -40,6 +40,15 @@
       "author": {
         "name": "Chad Metcalf"
       }
+    },
+    {
+      "name": "zsh-craft",
+      "source": "./plugins/zsh-craft",
+      "description": "Teaches Claude to write idiomatic zsh — modules, builtins, and parameter expansion instead of bash-in-disguise",
+      "version": "0.1.0",
+      "author": {
+        "name": "Chad Metcalf"
+      }
     }
   ]
 }

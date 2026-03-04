@@ -14,6 +14,7 @@ claude plugin install gh-recipes
 claude plugin install chad-tools
 claude plugin install exe-dev
 claude plugin install fzf-power
+claude plugin install zsh-craft
 ```
 
 **Inside Claude Code (slash commands):**
@@ -24,6 +25,7 @@ claude plugin install fzf-power
 /plugin install chad-tools
 /plugin install exe-dev
 /plugin install fzf-power
+/plugin install zsh-craft
 ```
 
 Install one, all, or pick and choose — they're independent.
@@ -142,6 +144,31 @@ Without this plugin, Claude writes `something | fzf` and calls it a day. With it
 
 ---
 
+## zsh-craft
+
+**Teaches Claude to write idiomatic zsh — not bash with a `#!/bin/zsh` shebang.**
+
+Without this plugin, Claude writes bash-in-disguise: `echo | grep`, `getopts`, `cat file`, `stat -c`, `date +%s`, and arrays indexed from 0. With it, Claude reaches for parameter expansion flags, zparseopts, glob qualifiers, `print -P`, zsh modules, and all the features that make zsh a different language from bash.
+
+### What it teaches
+
+| Area | What Claude learns |
+|------|-------------------|
+| **Parameter expansion** | 40+ composable flags: `(f)` split, `(s:,:)` split on delim, `(U)` uppercase, `(u)` unique, `(o)` sort, `(P)` indirect, `(q)` quote |
+| **zparseopts** | Native arg parsing with long options, boolean flags, required/optional args — no getopts/getopt/while-shift |
+| **print builtin** | `-P` for prompt colors, `-f` for printf, `-l` per-line, `-C` columns, `-v` to variable — replaces echo and printf |
+| **Glob qualifiers** | `(.)` files, `(/)` dirs, `(m-1)` modified today, `(Lm+10)` >10MB, `(om)` sort by mtime — replaces find entirely |
+| **String ops** | Replace grep, sed, awk, cut, tr, wc with pure zsh parameter expansion |
+| **Modules** | `zsh/datetime` (no date), `zsh/stat` (no stat), `zsh/mapfile` (no cat), `zsh/mathfunc` (no bc), `zsh/pcre` |
+
+### Commands
+
+- `/zsh-craft:add <description>` — Request a new zsh pattern or recipe
+- `/zsh-craft:issue <what went wrong>` — Report a bug
+- `/zsh-craft:help` — Plugin help
+
+---
+
 ## Contributing
 
 Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, duplicate issues are checked, and you review before anything gets filed.
@@ -151,6 +178,7 @@ Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or re
 /chad-tools:add Add a skill for managing git stashes
 /exe-dev:add Add support for VM snapshots
 /fzf-power:add Add a recipe for browsing AWS S3 buckets
+/zsh-craft:add Add coverage for zsh/curses TUI patterns
 ```
 
 Or open an issue directly at [github.com/metcalfc/claude-plugin/issues](https://github.com/metcalfc/claude-plugin/issues).

@@ -17,14 +17,14 @@ SKILLS (auto-activate based on context):
   resolve-reviews     Reply to PR review comments and resolve conversations
 
 COMMANDS:
-  /chad-tools:review-pr      Multi-agent PR review with inline GH comments
+  /chad-tools:review         Multi-agent code review (auto-detects local changes or PR by number)
   /chad-tools:pick-next      Prioritize open issues and launch worktrees
   /chad-tools:audit-plugins  Review/test all plugins for accuracy
   /chad-tools:add            Request a new skill (files an issue)
   /chad-tools:issue          Report a bug (gathers context, you review before filing)
   /chad-tools:help           This help text
 
-AGENTS (used by review-pr):
+AGENTS (used by review):
   code-reviewer              Security, correctness, architecture, style (always)
   silent-failure-hunter      Swallowed errors, lost context (if error handling in diff)
   pr-test-analyzer           Test correctness, coverage gaps (if test files in diff)

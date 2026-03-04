@@ -1,34 +1,68 @@
-# Claude Code Plugins by Chad Metcalf
+# Claude Code Plugins
 
-A collection of Claude Code plugins for everyday dev workflows. Install one, all, or pick and choose.
+A collection of plugins for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that teach Claude things it doesn't know out of the box — idiomatic shell scripting, GitHub API patterns, full fzf syntax, multi-agent code review, and more.
+
+**The problem:** Claude Code is good at general programming but has blind spots. It writes `bash` when you're in `zsh`. It uses bare `| fzf` without previews. It doesn't know `gh milestone list` isn't a real command. These plugins fix that by giving Claude domain-specific knowledge that activates automatically when relevant.
+
+**How plugins work:** Skills auto-activate based on context (mention a VM and exe-dev kicks in, write a zsh script and zsh-craft takes over). Commands are explicit (`/review`, `/exe-ls`). You install what you need — they're independent.
 
 ## Install
 
-Add the marketplace and install the plugins you want. Works from the terminal or inside Claude Code:
-
-**From the terminal:**
+Add the marketplace, then install what you want:
 
 ```bash
+# From the terminal
 claude plugin marketplace add metcalfc/claude-plugin
-claude plugin install gh-recipes
 claude plugin install chad-tools
-claude plugin install exe-dev
+claude plugin install gh-recipes
 claude plugin install fzf-power
 claude plugin install zsh-craft
+claude plugin install exe-dev
 ```
 
-**Inside Claude Code (slash commands):**
-
 ```
+# Inside Claude Code
 /plugin marketplace add metcalfc/claude-plugin
-/plugin install gh-recipes
 /plugin install chad-tools
-/plugin install exe-dev
-/plugin install fzf-power
-/plugin install zsh-craft
 ```
 
-Install one, all, or pick and choose — they're independent.
+---
+
+## chad-tools
+
+**Multi-agent code review and dev workflow automation.**
+
+The headline feature is `/review` — a single command that auto-detects what you've changed (unstaged, staged, last commit), selects the right review agents, runs them in parallel, and either posts a GitHub review (if a PR exists) or reports findings in your terminal. It also reviews PRs by number (`/review #123`).
+
+Five specialized agents, each focused on a different aspect of code quality:
+
+| Agent | Focus | Activates when |
+|-------|-------|----------------|
+| **code-reviewer** | Security, correctness, architecture, style | Always |
+| **silent-failure-hunter** | Swallowed errors, lost context, misleading fallbacks | Error handling in diff |
+| **pr-test-analyzer** | Test correctness, coverage gaps, flaky patterns | Test files in diff |
+| **comment-analyzer** | Doc accuracy, stale comments, misleading docs | Comments/docstrings in diff |
+| **type-design-analyzer** | Type design, breaking changes, leaky abstractions | Type definitions in diff |
+
+Agent selection uses comprehensive trigger patterns across Go, Rust, JS/TS, Python, Ruby, Bash/Zsh, and more. Findings below 80% confidence are filtered. Duplicates are deduplicated. Every comment posted matters.
+
+### Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/chad-tools:review` | Multi-agent code review — auto-detects scope, posts to PR if one exists |
+| `/chad-tools:pick-next` | Prioritize open issues and launch worktrees |
+| `/chad-tools:audit-plugins` | Run a review/test cycle across all plugins |
+
+### Skills (auto-activate)
+
+| Skill | What it does |
+|-------|-------------|
+| **resume-branch** | Check rebase status, PR state, orient to where you left off |
+| **gen-script** | Generate standalone bash/python/JS scripts |
+| **crystallize** | Turn a repeated pattern into a new Claude Code skill |
+| **protect-branch** | Add branch protection hooks to a repo |
+| **resolve-reviews** | Reply to PR review comments and resolve conversations |
 
 ---
 
@@ -36,7 +70,7 @@ Install one, all, or pick and choose — they're independent.
 
 **Recipes for `gh` CLI operations that don't have built-in subcommands.**
 
-Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Claude how to use `gh api` for the operations GitHub CLI doesn't cover natively. It automatically activates when Claude hits an unknown `gh` subcommand or when you ask about GitHub operations that need the API directly.
+Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Claude how to use `gh api` for the operations GitHub CLI doesn't cover natively. It auto-activates when Claude hits an unknown `gh` subcommand or when you ask about GitHub operations that need the API directly. Includes a **PostToolUse hook** that detects `gh` errors and nudges toward the right recipe.
 
 ### What's covered
 
@@ -58,64 +92,9 @@ Ever tried `gh milestone list` and got "unknown command"? This plugin teaches Cl
 ### Commands
 
 - `/gh-recipes:list` — Show all available recipes
-- `/gh-recipes:add <description>` — Request a new recipe
-- `/gh-recipes:issue <what went wrong>` — Report a bug (gathers context, sanitizes, you review before filing)
+- `/gh-recipes:add` — Request a new recipe
+- `/gh-recipes:issue` — Report a bug
 - `/gh-recipes:help` — Plugin help
-
-Also includes a **PostToolUse hook** that automatically detects `gh` "unknown command" errors and nudges toward the right recipe.
-
----
-
-## chad-tools
-
-**Personal dev workflow skills.**
-
-| Skill | What it does |
-|-------|-------------|
-| `/resume-branch` | Check rebase status, PR state, orient to where you left off |
-| `/gen-script` | Generate standalone bash/python/JS scripts |
-| `/crystallize` | Turn a repeated pattern into a new skill |
-| `/protect-branch` | Add branch protection hooks to a repo |
-| `/resolve-reviews` | Reply to PR review comments and resolve conversations |
-| `/chad-tools:audit-plugins` | Run a review/test cycle on gh-recipes and exe-dev |
-| `/chad-tools:add` | Request a new skill |
-| `/chad-tools:issue` | Report a bug (gathers context, sanitizes, you review before filing) |
-| `/chad-tools:help` | Plugin help |
-
----
-
-## exe-dev
-
-**Teaches Claude the [exe.dev](https://exe.dev) platform — instant Linux VMs managed entirely over SSH.**
-
-Without this plugin, Claude doesn't know that `ssh exe.dev new` creates a VM, that `scp` targets `<vm>.exe.xyz` (not `exe.dev`), or that every VM gets automatic HTTPS. With it, Claude understands the full platform and can work with your VMs autonomously. The skill auto-activates when you mention exe.dev, VMs, or anything `*.exe.xyz`.
-
-### Platform knowledge
-
-| Area | What Claude knows |
-|------|-------------------|
-| **Two SSH destinations** | The lobby (`ssh exe.dev`) for management vs direct VM access (`ssh <vm>.exe.xyz`) — and when to use which |
-| **VM lifecycle** | Create, list, restart, rename, clone, delete VMs |
-| **File transfer** | `scp`/`sftp` to the right destination, not the lobby |
-| **HTTP proxy & TLS** | Automatic HTTPS at `<vm>.exe.xyz`, port forwarding 3000-9999, proxy headers, auth URLs |
-| **Sharing & access** | Public/private, email invites, share links, per-port control |
-| **Custom domains** | CNAME/ALIAS setup with automatic TLS |
-| **LLM gateway** | Built-in proxy to Anthropic, OpenAI, Fireworks — no API keys on VMs |
-| **Email** | Send/receive via the internal gateway |
-| **Shelley** | Web-based coding agent on every VM, guidance files, upgrades |
-| **Agent-safe SSH** | Host key prompts, non-interactive pitfalls, `--json` output for machine parsing |
-
-### Commands
-
-Convenience shortcuts — the skill handles most things automatically, but these are handy for quick operations:
-
-- `/exe-ls` — List VMs with status
-- `/exe-new` — Create a new VM
-- `/exe-share` — Share a VM
-- `/exe-dev:status` — Quick health check of all VMs
-- `/exe-dev:add` — Request a new feature
-- `/exe-dev:issue` — Report a bug
-- `/exe-dev:help` — Plugin help
 
 ---
 
@@ -123,7 +102,7 @@ Convenience shortcuts — the skill handles most things automatically, but these
 
 **Teaches Claude to use fzf's full capabilities instead of bare `| fzf`.**
 
-Without this plugin, Claude writes `something | fzf` and calls it a day. With it, every fzf invocation gets preview windows, keybindings, headers, proper formatting, and theming. The skill auto-activates whenever Claude writes an interactive script.
+Without this plugin, Claude writes `something | fzf` and calls it a day. With it, every fzf invocation gets preview windows, keybindings, headers, proper formatting, and theming. Auto-activates whenever Claude writes an interactive script.
 
 ### What it teaches
 
@@ -138,8 +117,8 @@ Without this plugin, Claude writes `something | fzf` and calls it a day. With it
 ### Commands
 
 - `/fzf-power:theme` — Browse and apply fzf color themes to your shell profile
-- `/fzf-power:add <description>` — Request a new recipe or pattern
-- `/fzf-power:issue <what went wrong>` — Report a bug
+- `/fzf-power:add` — Request a new recipe or pattern
+- `/fzf-power:issue` — Report a bug
 - `/fzf-power:help` — Plugin help
 
 ---
@@ -163,9 +142,42 @@ Without this plugin, Claude writes bash-in-disguise: `echo | grep`, `getopts`, `
 
 ### Commands
 
-- `/zsh-craft:add <description>` — Request a new zsh pattern or recipe
-- `/zsh-craft:issue <what went wrong>` — Report a bug
+- `/zsh-craft:add` — Request a new zsh pattern or recipe
+- `/zsh-craft:issue` — Report a bug
 - `/zsh-craft:help` — Plugin help
+
+---
+
+## exe-dev
+
+**Teaches Claude the [exe.dev](https://exe.dev) platform — instant Linux VMs managed entirely over SSH.**
+
+Without this plugin, Claude doesn't know that `ssh exe.dev new` creates a VM, that `scp` targets `<vm>.exe.xyz` (not `exe.dev`), or that every VM gets automatic HTTPS. With it, Claude understands the full platform and can work with your VMs autonomously. Auto-activates when you mention exe.dev, VMs, or anything `*.exe.xyz`.
+
+### Platform knowledge
+
+| Area | What Claude knows |
+|------|-------------------|
+| **Two SSH destinations** | The lobby (`ssh exe.dev`) for management vs direct VM access (`ssh <vm>.exe.xyz`) — and when to use which |
+| **VM lifecycle** | Create, list, restart, rename, clone, delete VMs |
+| **File transfer** | `scp`/`sftp` to the right destination, not the lobby |
+| **HTTP proxy & TLS** | Automatic HTTPS at `<vm>.exe.xyz`, port forwarding 3000-9999, proxy headers, auth URLs |
+| **Sharing & access** | Public/private, email invites, share links, per-port control |
+| **Custom domains** | CNAME/ALIAS setup with automatic TLS |
+| **LLM gateway** | Built-in proxy to Anthropic, OpenAI, Fireworks — no API keys on VMs |
+| **Email** | Send/receive via the internal gateway |
+| **Shelley** | Web-based coding agent on every VM, guidance files, upgrades |
+| **Agent-safe SSH** | Host key prompts, non-interactive pitfalls, `--json` output for machine parsing |
+
+### Commands
+
+- `/exe-ls` — List VMs with status
+- `/exe-new` — Create a new VM
+- `/exe-share` — Share a VM
+- `/exe-dev:status` — Quick health check of all VMs
+- `/exe-dev:add` — Request a new feature
+- `/exe-dev:issue` — Report a bug
+- `/exe-dev:help` — Plugin help
 
 ---
 

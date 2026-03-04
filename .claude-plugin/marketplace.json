@@ -62,7 +62,7 @@
       "name": "claude-craft",
       "description": "Claude Code CLI knowledge, plugin management guardrails, and automation recommendations",
       "source": "./plugins/claude-craft",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"

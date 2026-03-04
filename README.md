@@ -200,6 +200,7 @@ Without this plugin, Claude says `claude plugins` (wrong — it's singular), use
 | **Marketplace ops** | `owner/repo` format (no `github:` prefix), `--sparse` for monorepos, `--scope` options |
 | **Version bumping** | Must bump in both `plugin.json` and marketplace registry, or users get stale cache |
 | **Automation recs** | Codebase analysis for hooks, skills, MCP servers, subagents, and plugins |
+| **API & model knowledge** | Model strings for all platforms (Anthropic, Bedrock, Vertex, Azure), effort parameter, thinking budgets, prompt patterns |
 
 ### Hook
 

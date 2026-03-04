@@ -14,6 +14,8 @@ SKILLS (auto-activate based on context):
                                 version bumping rules, marketplace operations
   claude-automation-recommender Analyze codebase and recommend hooks, skills, MCP servers,
                                 subagents, and plugins
+  claude-api-knowledge          Model strings, cross-platform IDs, effort parameter,
+                                extended thinking, and prompt patterns for Claude API
 
 HOOKS:
   PreToolUse (Bash)             Catches common CLI mistakes before execution:

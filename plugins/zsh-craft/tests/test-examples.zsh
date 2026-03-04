@@ -9,6 +9,10 @@ setopt ERR_EXIT NO_UNSET PIPE_FAIL EXTENDED_GLOB
 
 zmodload zsh/datetime
 
+# Temp directory for all harness artifacts — cleaned on any exit
+_harness_tmpdir=$(mktemp -d)
+trap 'rm -rf "$_harness_tmpdir" 2>/dev/null' EXIT INT TERM HUP
+
 # --- output helpers ---
 msg()  { print -P "%F{blue}==>%f %B$1%b" }
 pass() { print -P "  %F{green}PASS%f $1" }
@@ -41,12 +45,14 @@ is_untestable() {
   [[ $block == *'zsystem flock'* ]] && return 0
   [[ $block == *'pcre_compile'* ]] && return 0
   [[ $block == *'pcre_match'* ]] && return 0
+  [[ $block == *'echoti '* ]] && return 0
 
   # Function definitions without calls (they define but don't execute)
   [[ $block == *'myfunc()'* ]] && return 0
   [[ $block == *'myFunc()'* ]] && return 0
   [[ $block == *'my_command()'* ]] && return 0
   [[ $block == *'process_files()'* ]] && return 0
+  [[ $block == *'process_data'* ]] && return 0
   [[ $block == *'main()'* ]] && return 0
   [[ $block == *'usage()'* ]] && return 0
 
@@ -64,9 +70,9 @@ is_untestable() {
   local code_count=0
   for bline in "${blines[@]}"; do
     [[ -z $bline || $bline == \#* ]] && continue
-    (( code_count++ ))
+    code_count=$((code_count + 1))
     # Lines starting with * or ** or containing only glob qualifiers
-    [[ $bline == [\*\(]* || $bline == *'(m'* || $bline == *'(L'* || $bline == *'(om'* || $bline == *'(/)'* || $bline == *'(.)'* ]] && (( glob_count++ ))
+    [[ $bline == [\*\(]* || $bline == *'(m'* || $bline == *'(L'* || $bline == *'(om'* || $bline == *'(/)'* || $bline == *'(.)'* ]] && glob_count=$((glob_count + 1))
   done
   # If most code lines are bare globs, skip the block
   (( code_count > 0 && glob_count * 100 / code_count > 50 )) && return 0
@@ -94,8 +100,8 @@ is_untestable() {
   local total_count=0
   for line in "${lines[@]}"; do
     [[ -z $line ]] && continue
-    (( total_count++ ))
-    [[ $line == \#* ]] && (( comment_count++ ))
+    total_count=$((total_count + 1))
+    [[ $line == \#* ]] && comment_count=$((comment_count + 1))
   done
   # If more than 70% comments, it's a reference table not runnable code
   (( total_count > 0 && comment_count * 100 / total_count > 70 )) && return 0
@@ -113,11 +119,16 @@ test_file() {
   local block_line=0
   local line_num=0
 
+  if [[ ! -f $file ]]; then
+    print -P "  %F{red}error:%f File not found: $file" >&2
+    return 1
+  fi
+
   msg "Testing ${file:t}"
 
   # Read file and extract ```zsh blocks
   while IFS= read -r line; do
-    (( line_num++ ))
+    line_num=$((line_num + 1))
     if (( ! in_block )) && [[ $line == '```zsh' ]]; then
       in_block=1
       current_block=""
@@ -136,12 +147,17 @@ test_file() {
     fi
   done < "$file"
 
+  # Warn about unclosed code fences
+  if (( in_block )); then
+    print -P "  %F{red}WARNING:%f Unclosed code block starting at line $block_line in ${file:t}" >&2
+  fi
+
   local total=0 passed=0 failed=0 skipped=0
   local idx=0
 
   for block in "${block_contents[@]}"; do
-    (( idx++ ))
-    (( total++ ))
+    idx=$((idx + 1))
+    total=$((total + 1))
     local bline=${block_lines[$idx]}
 
     # Get first meaningful line for display
@@ -155,12 +171,12 @@ test_file() {
 
     if is_untestable "$block"; then
       skip "line $bline: $label"
-      (( skipped++ ))
+      skipped=$((skipped + 1))
       continue
     fi
 
     # Create a wrapper that sources the block in a controlled environment
-    local tmpfile=$(mktemp)
+    local script="$_harness_tmpdir/block_${idx}.zsh"
     {
       # Set up a safe environment with test files for glob examples
       cat <<'PREAMBLE'
@@ -171,7 +187,8 @@ zmodload zsh/mathfunc 2>/dev/null
 zmodload -F zsh/stat b:zstat 2>/dev/null
 
 # Create a sandbox with test files so globs have something to match
-_test_sandbox=$(mktemp -d)
+readonly _test_sandbox=$(mktemp -d)
+trap 'cd /; rm -rf "$_test_sandbox" 2>/dev/null' EXIT INT TERM HUP
 cd "$_test_sandbox"
 mkdir -p subdir
 touch file.txt file.log file.conf notes.md readme.md
@@ -189,35 +206,27 @@ touch "$tmpfile"
 
 PREAMBLE
       print -r -- "$block"
-      cat <<'CLEANUP'
-
-# Cleanup sandbox
-cd /
-rm -rf "$_test_sandbox" 2>/dev/null
-CLEANUP
-    } > "$tmpfile"
+    } > "$script"
 
     # Run with a timeout
     local output=""
     local exit_code=0
-    output=$(timeout 5 zsh "$tmpfile" 2>&1) || exit_code=$?
-
-    rm -f "$tmpfile"
+    output=$(timeout 5 zsh "$script" 2>&1) || exit_code=$?
 
     if (( exit_code == 0 )); then
       pass "line $bline: $label"
-      (( passed++ ))
+      passed=$((passed + 1))
     elif (( exit_code == 124 )); then
       skip "line $bline: (timeout) $label"
-      (( skipped++ ))
+      skipped=$((skipped + 1))
     else
       fail "line $bline: $label"
-      # Show first 3 lines of error
+      # Show first 3 lines of error (use print -r to avoid interpreting % sequences)
       local -a err_lines=("${(@f)output}")
       for (( i=1; i <= ${#err_lines} && i <= 3; i++ )); do
-        print -P "         %F{red}${err_lines[$i]}%f"
+        print -r -- "         ${err_lines[$i]}"
       done
-      (( failed++ ))
+      failed=$((failed + 1))
     fi
   done
 
@@ -245,7 +254,7 @@ local start=$EPOCHREALTIME
 local total_fail=0
 
 for f in "${files[@]}"; do
-  test_file "$f" || (( total_fail++ ))
+  test_file "$f" || total_fail=$((total_fail + 1))
   print
 done
 

@@ -62,19 +62,19 @@ ${path:t:r}  # file.tar  (basename, remove ext)
 
 ### Filter Array Elements
 ```zsh
-local -a lines=("${(@f)"$(<file)"}")
+local -a lines=("${(@f)"$(<$file)"}")
 
 # grep "pattern"        → keep matching
-${(M)lines:#*pattern*}
+print -l ${(M)lines:#*pattern*}
 
 # grep -v "pattern"     → exclude matching
-${lines:#*pattern*}
+print -l ${lines:#*pattern*}
 
 # grep -i "pattern"     → case insensitive
-${(M)lines:#(#i)*pattern*}
+print -l ${(M)lines:#(#i)*pattern*}
 
 # grep -c "pattern"     → count matches
-${#${(M)lines:#*pattern*}}
+print ${#${(M)lines:#*pattern*}}
 ```
 
 ### Regex Matching in Scalars
@@ -107,19 +107,19 @@ done
 line="alice:30:admin:active"
 
 # cut -d: -f2         → field by delimiter
-${${(s.:.)line}[2]}    # 30
+print ${${(s.:.)line}[2]}    # 30
 
 # cut -d: -f2-4       → field range
-${(j.:.)${(s.:.)line}[2,4]}    # 30:admin:active
+print ${(j.:.)${(s.:.)line}[2,4]}    # 30:admin:active
 
 # awk '{print $2}'    → whitespace-separated
-${${(s: :)line}[2]}
+print ${${(s: :)line}[2]}
 
 # awk -F, '{print $NF}'  → last field
-${${(s:,:)line}[-1]}
+print ${${(s:,:)line}[-1]}
 
 # awk '{print NF}'    → field count
-${#${(s: :)line}}
+print ${#${(s: :)line}}
 ```
 
 ### Columnar Processing
@@ -138,19 +138,19 @@ done
 str="Hello World"
 
 # tr '[:lower:]' '[:upper:]'
-${(U)str}                # HELLO WORLD
+print ${(U)str}                # HELLO WORLD
 
 # tr '[:upper:]' '[:lower:]'
-${(L)str}                # hello world
+print ${(L)str}                # hello world
 
 # tr -d 'aeiou'  (delete chars)
-${str//[aeiou]/}         # Hll Wrld
+print ${str//[aeiou]/}         # Hll Wrld
 
 # tr ' ' '_'  (single char replace)
-${str// /_}              # Hello_World
+print ${str// /_}              # Hello_World
 
 # tr -s ' '  (squeeze repeated)
-${str//  #/ }            # requires EXTENDED_GLOB; ## means one-or-more
+print ${str// ##/ }            # requires EXTENDED_GLOB; ## means one-or-more
 ```
 
 ## Replacing wc
@@ -238,20 +238,22 @@ content=${mapfile[file.txt]}
 For simple patterns, use zsh glob matching instead of regex:
 
 ```zsh
+str="hello123"
+
 # Check if string is all digits
-[[ $str == [0-9]## ]]     # EXTENDED_GLOB: ## = one or more
+[[ $str == [0-9]## ]] && print "all digits" || print "not all digits"
 
 # Check if string starts with prefix
-[[ $str == prefix* ]]
+[[ $str == hello* ]] && print "has prefix"
 
 # Check if string ends with suffix
-[[ $str == *suffix ]]
+[[ $str == *123 ]] && print "has suffix"
 
 # Check if string contains substring
-[[ $str == *substring* ]]
+[[ $str == *llo* ]] && print "contains"
 
 # Case-insensitive match
-[[ $str == (#i)pattern* ]]
+[[ $str == (#i)HELLO* ]] && print "case-insensitive match"
 ```
 
 ## Composing Operations

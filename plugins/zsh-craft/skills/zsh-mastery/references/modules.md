@@ -51,7 +51,7 @@ zmodload -F zsh/stat b:zstat
 # Get specific fields
 zstat +size file.txt       # size in bytes
 zstat +mtime file.txt      # modification time (unix timestamp)
-zstat +mode file.txt       # permissions (octal string)
+zstat +mode file.txt       # permissions (decimal integer, e.g. 33188 = 0100644)
 zstat +uid file.txt        # owner UID
 zstat +nlink file.txt      # hard link count
 
@@ -62,9 +62,15 @@ print "size=${st[size]} mtime=${st[mtime]} mode=${st[mode]}"
 
 # Human-readable mode string
 zstat -s +mode file.txt    # -rw-r--r--
+```
+
+### Symlinks and lstat
+```zsh
+zmodload -F zsh/stat b:zstat
 
 # Don't follow symlinks (lstat)
-zstat -L +size symlink
+ln -s file.txt mylink
+zstat -L +size mylink      # size of symlink itself
 ```
 
 ### Available Fields
@@ -260,16 +266,20 @@ print -l $aligned
 ```zsh
 zmodload zsh/terminfo
 
-# More reliable than hardcoded escape sequences
+# Non-parameterized capabilities via associative array
 print "${terminfo[bold]}bold text${terminfo[sgr0]}"
 print "${terminfo[smul]}underlined${terminfo[rmul]}"
 
-# Colors via terminfo (numbered 0-7)
-print "${terminfo[setaf 1]}red${terminfo[sgr0]}"
-print "${terminfo[setaf 2]}green${terminfo[sgr0]}"
+# Parameterized capabilities use echoti (not ${terminfo[...]})
+echoti setaf 1; print "red"; echoti sgr0
+echoti setaf 2; print "green"; echoti sgr0
+
+# Store in variable for reuse
+local red=$(echoti setaf 1) green=$(echoti setaf 2) reset=$(echoti sgr0)
+print "${red}error${reset}: ${green}ok${reset}"
 ```
 
-Note: For most scripting, `print -P "%F{red}..."` is simpler. Use `zsh/terminfo` when you need terminal capability detection or portability beyond zsh.
+Note: `${terminfo[bold]}` works for non-parameterized capabilities. For colors (which take a parameter), use `echoti setaf N`. For most scripting, `print -P "%F{red}..."` is simpler. Use `zsh/terminfo` when you need terminal capability detection or portability beyond zsh.
 
 ## zsh/system — Low-Level System Calls
 

@@ -27,6 +27,8 @@ The reference below covers the full platform. If something seems outdated, fetch
 ## Core Concepts
 
 - VMs run on bare metal via Cloud Hypervisor with container images (default: `exeuntu`)
+- **Default user is `exedev`** (not root) — home directory is `/home/exedev/`
+- Always use `~` or `$HOME` in paths, never hardcode `/root/` or `/home/exedev/`
 - VM creation takes ~2 seconds
 - Persistent disks survive restarts
 - VMs share CPU/RAM within subscription tier
@@ -71,12 +73,12 @@ ssh exe.dev doc                              # show docs
 
 ## Connecting to VMs (Direct)
 
-Target `<vmname>.exe.xyz` for shell access and file transfer:
+Target `<vmname>.exe.xyz` for shell access and file transfer. You connect as the `exedev` user (home: `/home/exedev/`).
 
 ```
-ssh <vmname>.exe.xyz                         # SSH into VM
-scp <localfile> <vmname>.exe.xyz:            # copy file to VM
-scp <vmname>.exe.xyz:<remote> <local>        # copy file from VM
+ssh <vmname>.exe.xyz                         # SSH into VM (as exedev)
+scp <localfile> <vmname>.exe.xyz:~/          # copy file to VM home
+scp <vmname>.exe.xyz:~/file <local>          # copy file from VM
 ```
 
 ## Non-Interactive & Agent Environments

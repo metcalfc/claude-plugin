@@ -1,6 +1,6 @@
 {
   "name": "zsh-craft",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Teaches Claude to write idiomatic zsh — modules, builtins, and parameter expansion instead of bash-in-disguise",
   "repository": "https://github.com/metcalfc/claude-plugin"
 }

@@ -2,13 +2,20 @@
 name: exe-dev-knowledge
 description: >-
   This skill should be used when the user mentions "exe.dev", "exe dev",
-  "exe VM", "exe.xyz", asks to "create a VM", "list my VMs", "share my
-  server", "make port public", "set up custom domain", "configure DNS",
-  "LLM gateway", "proxy port", "send email from VM", mentions Shelley
-  agent, SSH proxy, or works with exe.dev infrastructure in any way.
-  Provides comprehensive knowledge of the exe.dev platform, SSH CLI,
-  HTTP proxy, sharing, custom domains, LLM gateway, email, and VM
-  management.
+  "exe VM", "exe.xyz", or any VM lifecycle operation: "create a VM",
+  "delete a VM", "destroy a VM", "stop a VM", "start a VM", "restart a VM",
+  "resize a VM", "list my VMs", "list VMs", "list machines", "spin up",
+  "tear down", "provision". Also triggers on natural synonyms: "my server",
+  "my machine", "remote machine", "dev environment", "cloud VM",
+  "virtual machine", "remote dev box", "dev box". Also triggers on
+  sharing and networking: "share my server", "make port public",
+  "set up custom domain", "configure DNS", "LLM gateway", "proxy port",
+  "send email from VM". Also triggers on SSH-related phrases:
+  "SSH into my", "SSH proxy", "SSH to my VM", "ssh exe", "connect to my VM",
+  "remote into". Also triggers when the user mentions Shelley agent or
+  works with exe.dev infrastructure in any way. Provides comprehensive
+  knowledge of the exe.dev platform, SSH CLI, HTTP proxy, sharing,
+  custom domains, LLM gateway, email, and VM management.
 ---
 
 # exe.dev Platform Knowledge

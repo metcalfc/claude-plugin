@@ -1,8 +1,10 @@
 ---
 name: gh-api-recipes
-description: This skill should be used when Claude attempts a gh CLI operation
+description: >-
+  This skill should be used when Claude attempts a gh CLI operation
   that fails because the subcommand doesn't exist, when Claude encounters
-  "unknown command" errors from gh, or when the user asks about GitHub
+  "unknown command" errors from gh, when the user says "GitHub API",
+  "gh api", "REST API for GitHub", or when the user asks about GitHub
   operations that require `gh api` directly. Common triggers include questions
   about "milestones", "branch protection", "repo topics", "autolinks",
   "deploy keys", "webhooks", "environments", "repository rulesets",
@@ -10,13 +12,15 @@ description: This skill should be used when Claude attempts a gh CLI operation
   "repo analytics", "notifications", "GitHub Pages", "actions permissions",
   "GITHUB_TOKEN permissions", "commit statuses", "interaction limits",
   "repository dispatch", "dependabot alerts", "resolve review threads",
-  or "resolve conversations". Also applies when the user asks "how do I
-  create a milestone with gh", "add a collaborator", "check repo traffic",
+  or "resolve conversations". Also applies when the user asks natural
+  questions like "who has access to this repo", "check repo traffic",
+  "repo stats", "check forks", "how many stars", "add a collaborator",
   "manage notifications", "set up GitHub Pages", "configure actions
   permissions", "restrict allowed actions", "post a commit status",
   "lock down repo interactions", "trigger a repository dispatch",
-  "list dependabot alerts", "dismiss dependabot alert", or "resolve PR
-  review conversations".
+  "list dependabot alerts", "dismiss dependabot alert", "resolve PR
+  review conversations", "create a milestone", "add a webhook",
+  "set up branch protection", "configure rulesets".
 ---
 
 # gh API Recipes

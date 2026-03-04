@@ -1,12 +1,19 @@
 ---
 name: fzf-mastery
-description: This skill should be used when Claude is writing a bash script that
-  involves user selection, interactive filtering, file picking, process selection,
+description: >-
+  This skill should be used when Claude is writing a script that involves
+  user selection, interactive filtering, file picking, process selection,
   or any interactive list. Triggers when the user asks to "write a script",
   "make a selector", "pick from a list", "choose a file", "select a process",
   "interactive menu", "fuzzy finder", "use fzf", "fzf preview", "fzf theme",
   or when Claude would otherwise pipe output into basic `| fzf`. Also triggers
-  when the user says "make it interactive", "let me choose", or "add a picker".
+  when the user says "make it interactive", "let me choose", "add a picker",
+  "autocomplete", "search through", "browse", "filter list", "dropdown".
+  Also triggers on use-case patterns: "git log picker", "branch selector",
+  "branch picker", "commit picker", "docker container picker",
+  "preview files", "preview commits", "process picker", "kill picker",
+  "select from output", "choose from results", "pick a branch",
+  "pick a commit", "pick a container", "pick a file".
 ---
 
 # fzf Mastery

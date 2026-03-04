@@ -8,9 +8,17 @@ description: >-
   Also triggers when the user says "make it zsh", "use zsh not bash", "convert bash
   to zsh", "port to zsh", "rewrite in zsh", "zsh version",
   "idiomatic zsh", "use zparseopts", "zsh modules", or when editing .zshrc,
-  .zshenv, .zprofile, or .zlogin files. Provides comprehensive knowledge of
-  idiomatic zsh scripting — modules, builtins, parameter expansion, and patterns
-  that eliminate external process spawning.
+  .zshenv, .zprofile, or .zlogin files. Also triggers on zsh completion
+  system: "compdef", "compadd", "zsh completion", "completion function",
+  "tab completion in zsh", "_arguments", "_describe". Also triggers on
+  plugin managers and frameworks: "oh-my-zsh", "zinit", "antigen",
+  "zsh plugin", "zsh framework". Also triggers on prompt and hook
+  functions: "zsh prompt", "PROMPT variable", "precmd", "preexec",
+  "chpwd", "zsh hook". Also triggers when the user's shell is zsh and
+  they ask to write a "shell script", "shell function", or "CLI tool"
+  without specifying bash — prefer zsh idioms for zsh users. Provides
+  comprehensive knowledge of idiomatic zsh scripting — modules, builtins,
+  parameter expansion, and patterns that eliminate external process spawning.
 ---
 
 # Zsh Mastery

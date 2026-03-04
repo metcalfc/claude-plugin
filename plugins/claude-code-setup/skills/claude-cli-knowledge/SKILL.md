@@ -7,8 +7,9 @@ description: >-
   "plugin marketplace", "marketplace add", installs or manages plugins,
   or discusses plugin versioning. Also triggers when the user says
   "install a plugin", "add a marketplace", "update a plugin", "bump version",
-  "plugin version", "plugin cache", or when generating or suggesting any
-  `claude` CLI command.
+  "plugin version", "plugin cache", "setup-token", "headless auth",
+  "CLAUDE_CODE_OAUTH_TOKEN", "authenticate headless", "CI authentication",
+  "long-lived token", or when generating or suggesting any `claude` CLI command.
 ---
 
 # Claude CLI Knowledge
@@ -129,6 +130,60 @@ claude mcp list                              # List configured MCP servers
 After `plugin update`, restart Claude Code — plugins load at session start, not dynamically.
 
 See [references/plugin-lifecycle.md](references/plugin-lifecycle.md) for semver rules, the full cache flow, and validation commands.
+
+## Authentication — `claude setup-token` and Headless Auth
+
+`claude setup-token` generates a **1-year OAuth token** for headless/automated environments. This is the answer when users need Claude Code on remote servers, Docker containers, CI/CD pipelines, or anywhere without a browser.
+
+**Requires:** Claude Pro or Max subscription.
+
+### Setup Flow
+
+1. **On a machine with a browser:** run `claude setup-token`
+2. Browser opens for OAuth — authenticate normally
+3. Token is displayed once: `sk-ant-oat01-xxxxx...xxxxx`
+4. **Store it securely** (password manager, CI secrets, etc.)
+
+### Using the Token
+
+Set the `CLAUDE_CODE_OAUTH_TOKEN` environment variable:
+
+```bash
+export CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-your-token-here"
+```
+
+Claude Code automatically uses this token instead of interactive browser auth. No `/login` needed.
+
+### Common Use Cases
+
+| Scenario | How |
+|----------|-----|
+| **Remote SSH server** | Add `export CLAUDE_CODE_OAUTH_TOKEN=...` to `~/.bashrc` (mode 0600) |
+| **Docker container** | Pass as env var: `docker run -e CLAUDE_CODE_OAUTH_TOKEN=... image` |
+| **GitHub Actions** | Store as repository secret, reference in workflow |
+| **CI/CD pipelines** | Store in your CI's secrets manager |
+| **Cloud IDEs** | Set in workspace environment variables |
+
+### Important Rules
+
+- **Never set both** `CLAUDE_CODE_OAUTH_TOKEN` and `ANTHROPIC_API_KEY` simultaneously — causes auth conflicts
+- `CLAUDE_CODE_OAUTH_TOKEN` takes precedence over credentials in `~/.claude/.credentials.json`
+- Token expires after 1 year — regenerate with `claude setup-token` before expiration
+- `claude setup-token` itself needs a TTY (browser) — run it locally, use the token remotely
+- For API key auth (Console users), use `ANTHROPIC_API_KEY` instead
+
+### Alternative: API Key Auth
+
+For Console/API users (not Pro/Max subscribers):
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-api03-..."
+claude -p "your prompt here"
+```
+
+This works for `claude -p` (print mode) in CI pipelines. For interactive sessions, use `CLAUDE_CODE_OAUTH_TOKEN`.
+
+See [references/cli-commands.md](references/cli-commands.md) for all authentication-related flags and environment variables.
 
 ## Local Plugin Testing
 

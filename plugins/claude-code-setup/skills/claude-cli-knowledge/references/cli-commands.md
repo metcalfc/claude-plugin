@@ -102,11 +102,25 @@ claude plugin marketplace update [name]       # Update marketplace(s)
 
 ### `claude setup-token`
 
-Set up long-lived auth token (needs TTY).
+Generate a long-lived OAuth token (1 year) for headless/automated environments. Needs a browser (TTY) to run — use locally, deploy the token remotely. Requires Claude Pro or Max subscription.
+
+The token is displayed once after browser auth: `sk-ant-oat01-xxxxx...xxxxx`
 
 ### `claude update`
 
 Check for and install updates (alias: `claude upgrade`).
+
+## Authentication Environment Variables
+
+| Variable | Purpose | Notes |
+|----------|---------|-------|
+| `CLAUDE_CODE_OAUTH_TOKEN` | Long-lived OAuth token from `setup-token` | Pro/Max only. 1-year expiry. Takes precedence over credential files. |
+| `ANTHROPIC_API_KEY` | Console/API key auth | For API billing users. Works with `-p` mode. |
+| `CLAUDE_CODE_API_KEY_HELPER_TTL_MS` | Custom refresh interval for `apiKeyHelper` | Default: 5 minutes or on 401 |
+
+**Do not set both `CLAUDE_CODE_OAUTH_TOKEN` and `ANTHROPIC_API_KEY`** — causes authentication conflicts.
+
+Credential precedence: `CLAUDE_CODE_OAUTH_TOKEN` > `ANTHROPIC_API_KEY` > `~/.claude/.credentials.json`
 
 ## Non-Interactive / CI Usage
 
@@ -131,4 +145,10 @@ claude -p "review this PR" --model opus
 
 # Fallback model for overloaded primary
 claude -p "quick fix" --fallback-model haiku
+
+# Headless with OAuth token
+CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-..." claude -p "fix lint errors"
+
+# CI with API key
+ANTHROPIC_API_KEY="sk-ant-api03-..." claude -p "review changes" --output-format json
 ```

@@ -54,7 +54,7 @@
       "name": "claude-code-setup",
       "source": "./plugins/claude-code-setup",
       "description": "Claude Code CLI knowledge, plugin management guardrails, and automation recommendations",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Chad Metcalf"
       }

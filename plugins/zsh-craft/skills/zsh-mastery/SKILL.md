@@ -107,7 +107,7 @@ Load with `zmodload`. The essential ones: `zsh/datetime` (timestamps without `da
 See `references/modules.md` for all modules with examples.
 
 ### 10. $(<file) File Reading
-`$(<file)` reads a file's contents without spawning `cat`. Combine with `(f)` to get an array of lines: `lines=("${(@f)"$(<file)"}")`.
+`$(<file)` reads a file's contents without spawning `cat`. Note: trailing newlines are stripped (same as command substitution). Combine with `(f)` to get an array of lines: `lines=("${(@f)"$(<file)"}")`.
 
 ## Common Patterns
 
@@ -146,10 +146,10 @@ main "$@"
 
 ### Colored Output Pattern
 ```zsh
-msg()  { print -P "%F{blue}==>%f %B$1%b" }
-warn() { print -P "%F{yellow}warning:%f $1" >&2 }
-err()  { print -P "%F{red}error:%f $1" >&2 }
-die()  { err "$1"; return ${2:-1} }
+msg()  { print -P "%F{blue}==>%f %B${1//%/%%}%b" }
+warn() { print -P "%F{yellow}warning:%f ${1//%/%%}" >&2 }
+err()  { print -P "%F{red}error:%f ${1//%/%%}" >&2 }
+die()  { err "$1"; return ${2:-1} }  # return + ERR_EXIT = script exits
 ```
 
 ### File Processing Without External Tools

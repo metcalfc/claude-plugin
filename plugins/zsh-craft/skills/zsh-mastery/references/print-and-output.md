@@ -63,10 +63,10 @@ print -P "%(?.%F{green}ok%f.%F{red}fail%f)"  # based on exit status
 
 ### Colored Message Functions
 ```zsh
-msg()  { print -P "%F{blue}==>%f %B$1%b" }
-warn() { print -P "%F{yellow}warning:%f $1" >&2 }
-err()  { print -P "%F{red}error:%f $1" >&2 }
-die()  { err "$1"; return ${2:-1} }
+msg()  { print -P "%F{blue}==>%f %B${1//%/%%}%b" }
+warn() { print -P "%F{yellow}warning:%f ${1//%/%%}" >&2 }
+err()  { print -P "%F{red}error:%f ${1//%/%%}" >&2 }
+die()  { err "$1"; return ${2:-1} }  # return + ERR_EXIT = script exits
 ```
 
 ### Formatted Tables

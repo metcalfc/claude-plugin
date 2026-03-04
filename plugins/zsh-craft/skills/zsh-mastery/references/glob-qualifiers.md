@@ -121,7 +121,7 @@ Qualifiers concatenate. Read left to right:
 | `find . -size +1M` | `**/*(Lm+1)` |
 | `find . -size 0` | `**/*(L0)` |
 | `find . -empty -type d` | `**/*(D/^F)` |
-| `find . -perm /u+x -type f` | `**/*(*.)` |
+| `find . -perm /u+x -type f` | `**/*(.*)`  |
 | `find . -user chad` | `**/*(u:chad:)` |
 | `find . -newer ref` | `**/*(e:'[[ $REPLY -nt ref ]]':)` |
 | `find . -maxdepth 1 -type f` | `*(.)`  |

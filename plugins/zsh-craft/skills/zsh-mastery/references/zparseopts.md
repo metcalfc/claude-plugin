@@ -115,8 +115,8 @@ local port=${arg_port[-1]}  # 8080 if -p not given
 ### Value is the last array element
 `-f filename` produces `arg_file=( -f filename )`. The value is `${arg_file[-1]}`, not `${arg_file[1]}`.
 
-### No `--opt=value` parsing
-`--file=foo` is parsed as `--file` with argument `=foo` (leading `=`). Users must use `--file foo` with a space.
+### `--opt=value` requires `:-` spec
+With `:` spec, the argument must be a separate word. `--file=foo` parses as `--file` with argument `=foo` (leading `=`). Use `:-` spec for same-word syntax: `--file=foo` is parsed correctly with `-file:-`.
 
 ### `-F` requires zsh 5.4+
 If targeting older zsh, omit `-F` and handle unknown options manually.

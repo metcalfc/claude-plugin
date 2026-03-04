@@ -92,8 +92,9 @@ Use with `${var/pattern/repl}` or `${var#pattern}`:
 # Read file → split lines → deduplicate → uppercase → join with commas
 result=${(j:,:)${(uU)${(f)"$(<file.txt)"}}}
 
-# Get unique sorted directory names from a list of paths
-dirs=${(uo)${${(f)"$(find . -type f)"}:h}}
+# Unique sorted dirnames from an array of paths
+local -a paths=(/a/b/c /a/b/d /x/y/z /a/b/e)
+print -l ${(uo)${paths:h}}
 
 # Split CSV line, get 3rd field, lowercase
 val=${(L)${(s:,:)line}[3]}

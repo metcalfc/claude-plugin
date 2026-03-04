@@ -14,10 +14,10 @@ _harness_tmpdir=$(mktemp -d)
 trap 'rm -rf "$_harness_tmpdir" 2>/dev/null' EXIT INT TERM HUP
 
 # --- output helpers ---
-msg()  { print -P "%F{blue}==>%f %B$1%b" }
-pass() { print -P "  %F{green}PASS%f $1" }
-fail() { print -P "  %F{red}FAIL%f $1" }
-skip() { print -P "  %F{yellow}SKIP%f $1" }
+msg()  { print -P "%F{blue}==>%f %B${1//%/%%}%b" }
+pass() { print -P "  %F{green}PASS%f ${1//%/%%}" }
+fail() { print -P "  %F{red}FAIL%f ${1//%/%%}" }
+skip() { print -P "  %F{yellow}SKIP%f ${1//%/%%}" }
 
 # --- patterns that can't be tested in isolation ---
 # These contain incomplete fragments, interactive commands, or

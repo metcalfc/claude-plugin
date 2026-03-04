@@ -38,7 +38,7 @@ zparseopts [-D] [-E] [-F] [-K] [-M] [-a array] [-A assoc] [--] spec ...
 my_command() {
   local -a flag_help flag_verbose flag_dry
   local -a arg_output arg_count
-  zparseopts -D -F -- \
+  zparseopts -D -E -F -- \
     {h,-help}=flag_help \
     {v,-verbose}=flag_verbose \
     {n,-dry-run}=flag_dry \
@@ -110,7 +110,42 @@ zparseopts -D -K -- p:=arg_port || return 1
 local port=${arg_port[-1]}  # 8080 if -p not given
 ```
 
+## When to Use `-E` (Extract Mode)
+
+Without `-E`, zparseopts **stops at the first non-option argument**. This means flags after positional args are silently ignored:
+
+```zsh
+# BUG: --verbose is never parsed because "file.txt" comes first
+my_cmd() {
+  local -a flag_verbose
+  zparseopts -D -F -- {v,-verbose}=flag_verbose || return 1
+  # my_cmd file.txt --verbose  →  flag_verbose is EMPTY
+  # my_cmd --verbose file.txt  →  flag_verbose is set
+}
+```
+
+Add `-E` when your command accepts **positional args mixed with flags** (GNU-style):
+
+```zsh
+# FIXED: -E tells zparseopts to scan past non-option args
+my_cmd() {
+  local -a flag_verbose
+  zparseopts -D -E -F -- {v,-verbose}=flag_verbose || return 1
+  # my_cmd file.txt --verbose  →  flag_verbose is set ✓
+  # my_cmd --verbose file.txt  →  flag_verbose is set ✓
+}
+```
+
+**Rule of thumb:**
+- `-D -F` — flags must come before positional args (strict POSIX style)
+- `-D -E -F` — flags can appear anywhere (GNU style, what most users expect)
+
+If your tool accepts positional arguments, default to `-D -E -F` unless you have a specific reason to enforce strict ordering.
+
 ## Gotchas
+
+### Flags after positional args are silently ignored without `-E`
+This is the most common zparseopts footgun. Without `-E`, `cmd arg --flag` silently drops `--flag` — no error, no warning, even with `-F`. The flag passes through as a positional arg, where it can cause downstream parsing failures. See the `-E` section above.
 
 ### Value is the last array element
 `-f filename` produces `arg_file=( -f filename )`. The value is `${arg_file[-1]}`, not `${arg_file[1]}`.
@@ -140,7 +175,7 @@ setopt ERR_EXIT NO_UNSET PIPE_FAIL
 process_files() {
   local -a flag_help=() flag_verbose=() flag_recursive=()
   local -a arg_pattern=() arg_output=() arg_exclude=()
-  zparseopts -D -F -- \
+  zparseopts -D -E -F -- \
     {h,-help}=flag_help \
     {v,-verbose}=flag_verbose \
     {r,-recursive}=flag_recursive \

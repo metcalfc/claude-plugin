@@ -116,7 +116,7 @@ See `references/modules.md` for all modules with examples.
 main() {
   local -a flag_help flag_verbose
   local -a arg_output
-  zparseopts -D -F -- \
+  zparseopts -D -E -F -- \
     {h,-help}=flag_help \
     {v,-verbose}=flag_verbose \
     {o,-output}:=arg_output \

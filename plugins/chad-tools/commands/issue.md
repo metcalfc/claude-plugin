@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Report a bug with a chad-tools skill
+description: (chad-tools) Report a bug
 argument-hint: "<what went wrong>"
 allowed-tools:
   - Bash

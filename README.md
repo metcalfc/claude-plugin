@@ -18,7 +18,7 @@ claude plugin install gh-recipes
 claude plugin install fzf-power
 claude plugin install zsh-craft
 claude plugin install exe-dev
-claude plugin install claude-code-setup
+claude plugin install claude-craft
 ```
 
 ```
@@ -51,9 +51,12 @@ Agent selection uses comprehensive trigger patterns across Go, Rust, JS/TS, Pyth
 
 | Command | What it does |
 |---------|-------------|
-| `/chad-tools:review` | Multi-agent code review — auto-detects scope, posts to PR if one exists |
-| `/chad-tools:pick-next` | Prioritize open issues and launch worktrees |
-| `/chad-tools:audit-plugins` | Run a review/test cycle across all plugins |
+| `/chad-tools:review` | Multi-agent code review — local diff or PR |
+| `/chad-tools:deslop` | Strip AI code slop from branch diff |
+| `/chad-tools:humanize` | Rewrite prose to remove AI writing patterns |
+| `/chad-tools:done` | Mark worktree done for cwprune |
+| `/chad-tools:pick-next` | Pick next issue and launch worktree |
+| `/chad-tools:audit-plugins` | Audit all marketplace plugins for accuracy |
 
 ### Skills (auto-activate)
 
@@ -182,7 +185,7 @@ Without this plugin, Claude doesn't know that `ssh exe.dev new` creates a VM, th
 
 ---
 
-## claude-code-setup
+## claude-craft
 
 **Teaches Claude the correct `claude` CLI commands and plugin management lifecycle.**
 
@@ -208,9 +211,9 @@ Without this plugin, Claude says `claude plugins` (wrong — it's singular), use
 
 ### Commands
 
-- `/claude-code-setup:add` — Request a new feature
-- `/claude-code-setup:issue` — Report a bug
-- `/claude-code-setup:help` — Plugin help
+- `/claude-craft:add` — Request a new feature
+- `/claude-craft:issue` — Report a bug
+- `/claude-craft:help` — Plugin help
 
 ---
 
@@ -224,7 +227,7 @@ Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or re
 /exe-dev:add Add support for VM snapshots
 /fzf-power:add Add a recipe for browsing AWS S3 buckets
 /zsh-craft:add Add coverage for zsh/curses TUI patterns
-/claude-code-setup:add Add coverage for claude mcp server management patterns
+/claude-craft:add Add coverage for claude mcp server management patterns
 ```
 
 Or open an issue directly at [github.com/metcalfc/claude-plugin/issues](https://github.com/metcalfc/claude-plugin/issues).

@@ -1,6 +1,6 @@
 ---
 name: add
-description: Request a new gh recipe be added to the plugin
+description: (gh-recipes) Request a new recipe
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash

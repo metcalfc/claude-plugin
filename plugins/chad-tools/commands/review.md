@@ -1,6 +1,6 @@
 ---
 name: review
-description: Review code using specialized agents. Auto-detects local changes, or review a PR by number.
+description: (chad-tools) Multi-agent code review — local diff or PR
 argument-hint: "[#PR|unstaged|staged|last|HEAD~N|<file>...]"
 allowed-tools:
   - Bash

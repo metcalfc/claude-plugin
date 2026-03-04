@@ -1,10 +1,6 @@
 ---
 name: exe-share
-description: >-
-  Manage exe.dev VM sharing and public access. Use when the user says "share my
-  VM", "make VM public", "make VM private", "add access", "share port", "share
-  my server", "make port public", or any request to manage sharing, access
-  control, or public visibility of exe.dev VMs.
+description: (exe-dev) Manage VM sharing and public access
 argument-hint: "<vmname> [public|private|add <email>|port <port>]"
 allowed-tools:
   - Bash

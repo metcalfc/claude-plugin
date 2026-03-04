@@ -1,6 +1,6 @@
 ---
 name: add
-description: Request a new exe-dev feature be added to the plugin
+description: (exe-dev) Request a new feature
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash

@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Report a bug with an exe-dev command
+description: (exe-dev) Report a bug
 argument-hint: "<what went wrong>"
 allowed-tools:
   - Bash

@@ -1,13 +1,13 @@
 ---
 name: add
-description: Request a new claude-code-setup feature be added to the plugin
+description: (claude-craft) Request a new feature
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash
   - AskUserQuestion
 ---
 
-File a GitHub issue on the plugin repo requesting a new claude-code-setup feature.
+File a GitHub issue on the plugin repo requesting a new claude-craft feature.
 
 Take the user's argument as the description of what they tried to do and what was missing.
 
@@ -16,7 +16,7 @@ Take the user's argument as the description of what they tried to do and what wa
 Before filing, search for existing open issues:
 
 ```bash
-gh issue list --repo metcalfc/claude-plugin --label "claude-code-setup" --state open --json number,title --jq '.[] | "#\(.number) \(.title)"'
+gh issue list --repo metcalfc/claude-plugin --label "claude-craft" --state open --json number,title --jq '.[] | "#\(.number) \(.title)"'
 ```
 
 If any existing issue looks related, show the user the matches and ask:
@@ -60,14 +60,14 @@ Before drafting, scrub the request body of anything sensitive:
 ## Step 3: File the issue
 
 ```bash
-gh label create claude-code-setup --repo metcalfc/claude-plugin --description "claude-code-setup plugin" --color 0075ca 2>/dev/null
+gh label create claude-craft --repo metcalfc/claude-plugin --description "claude-craft plugin" --color 0075ca 2>/dev/null
 ```
 
 ```bash
 gh issue create \
   --repo metcalfc/claude-plugin \
-  --title "claude-code-setup: <short summary>" \
-  --label "claude-code-setup,enhancement" \
+  --title "claude-craft: <short summary>" \
+  --label "claude-craft,enhancement" \
   --body "<body>"
 ```
 

@@ -1,5 +1,8 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "chad-tools-marketplace",
+  "version": "1.0.0",
+  "description": "Claude Code plugins for dev workflows, shell scripting, GitHub API patterns, VM management, and more",
   "owner": {
     "name": "Chad Metcalf",
     "email": "chad@metcalfc.com"
@@ -7,54 +10,60 @@
   "plugins": [
     {
       "name": "chad-tools",
+      "description": "Multi-agent code review, AI slop removal, worktree management, and dev workflow automation",
       "source": "./plugins/chad-tools",
-      "description": "Chad's personal Claude Code skills and workflows",
-      "version": "1.1.1",
+      "version": "1.2.0",
+      "category": "development",
       "author": {
         "name": "Chad Metcalf"
       }
     },
     {
       "name": "exe-dev",
-      "source": "./plugins/exe-dev",
       "description": "exe.dev VM management — SSH CLI, HTTP proxy, sharing, and Shelley integration",
+      "source": "./plugins/exe-dev",
       "version": "0.2.1",
+      "category": "development",
       "author": {
         "name": "Chad Metcalf"
       }
     },
     {
       "name": "gh-recipes",
-      "source": "./plugins/gh-recipes",
       "description": "Recipes for gh CLI operations that don't have built-in subcommands (milestones, branch protection, webhooks, etc.)",
+      "source": "./plugins/gh-recipes",
       "version": "0.2.0",
+      "category": "development",
       "author": {
         "name": "Chad Metcalf"
       }
     },
     {
       "name": "fzf-power",
-      "source": "./plugins/fzf-power",
       "description": "Teaches Claude to use fzf's full power — preview windows, keybindings, theming, and advanced patterns instead of bare | fzf",
+      "source": "./plugins/fzf-power",
       "version": "0.1.1",
+      "category": "productivity",
       "author": {
         "name": "Chad Metcalf"
       }
     },
     {
       "name": "zsh-craft",
-      "source": "./plugins/zsh-craft",
       "description": "Teaches Claude to write idiomatic zsh — modules, builtins, and parameter expansion instead of bash-in-disguise",
+      "source": "./plugins/zsh-craft",
       "version": "0.2.0",
+      "category": "productivity",
       "author": {
         "name": "Chad Metcalf"
       }
     },
     {
-      "name": "claude-code-setup",
-      "source": "./plugins/claude-code-setup",
+      "name": "claude-craft",
       "description": "Claude Code CLI knowledge, plugin management guardrails, and automation recommendations",
-      "version": "0.2.0",
+      "source": "./plugins/claude-craft",
+      "version": "0.3.0",
+      "category": "development",
       "author": {
         "name": "Chad Metcalf"
       }

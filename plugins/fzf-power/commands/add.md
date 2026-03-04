@@ -1,6 +1,6 @@
 ---
 name: add
-description: Request a new fzf recipe or pattern
+description: (fzf-power) Request a new pattern
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash

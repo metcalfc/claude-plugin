@@ -1,9 +1,6 @@
 ---
 name: status
-description: >-
-  Quick health check of exe.dev VMs. Use when the user says "check my VMs",
-  "VM status", "are my VMs running", "exe.dev status", or any request to check
-  the health or running state of exe.dev virtual machines.
+description: (exe-dev) Quick VM health check
 allowed-tools:
   - Bash
 ---

@@ -1,6 +1,6 @@
 ---
 name: add
-description: Request a new zsh-craft pattern or recipe
+description: (zsh-craft) Request a new pattern
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash

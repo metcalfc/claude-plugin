@@ -1,7 +1,7 @@
 ---
 name: audit-plugins
-description: Review and test gh-recipes, exe-dev, fzf-power, zsh-craft, and claude-code-setup plugins for accuracy
-argument-hint: "[gh-recipes|exe-dev|fzf-power|zsh-craft|claude-code-setup|all]"
+description: (chad-tools) Audit all marketplace plugins for accuracy
+argument-hint: "[gh-recipes|exe-dev|fzf-power|zsh-craft|claude-craft|all]"
 allowed-tools:
   - Bash
   - Read
@@ -11,7 +11,7 @@ allowed-tools:
   - Task
 ---
 
-Run a review and test cycle on the gh-recipes, exe-dev, fzf-power, zsh-craft, and claude-code-setup plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
+Run a review and test cycle on the gh-recipes, exe-dev, fzf-power, zsh-craft, and claude-craft plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
 
 ## Workflow
 
@@ -119,9 +119,9 @@ If zsh-craft is in scope:
 
 Report zsh-craft results in the same table format.
 
-### 9. Test claude-code-setup
+### 9. Test claude-craft
 
-If claude-code-setup is in scope:
+If claude-craft is in scope:
 
 1. Check `claude --version` to verify Claude CLI is installed
 2. Verify the correct subcommand names:
@@ -133,8 +133,8 @@ If claude-code-setup is in scope:
 4. Confirm the hook catches known bad patterns by reviewing `hooks/hooks.json` against the current CLI behavior
 5. Compare the automation-recommender skill against the upstream version for any drift
 
-Report claude-code-setup results in the same table format.
+Report claude-craft results in the same table format.
 
 ### 10. Recommended Actions
 
-If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add`, `/fzf-power:add`, `/zsh-craft:add`, or `/claude-code-setup:add`.
+If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add`, `/fzf-power:add`, `/zsh-craft:add`, or `/claude-craft:add`.

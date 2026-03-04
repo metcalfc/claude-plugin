@@ -2,6 +2,8 @@
 
 A collection of Claude Code plugins. Each plugin lives in `plugins/<name>/`.
 
+**This repo is the canonical home for all plugins, skills, commands, and agents.** If something is useful but not big enough to be its own plugin, it goes in `chad-tools`. Only create a new plugin when the scope warrants its own install.
+
 ## Plugin Conventions
 
 ### Directory Structure
@@ -36,7 +38,7 @@ Every plugin MUST have these three commands:
 ```yaml
 ---
 name: add
-description: Request a new <plugin-name> feature be added to the plugin
+description: (<plugin-name>) Request a new feature
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash
@@ -59,7 +61,7 @@ Flow:
 ```yaml
 ---
 name: issue
-description: Report a bug with <plugin-name>
+description: (<plugin-name>) Report a bug
 argument-hint: "<what went wrong>"
 allowed-tools:
   - Bash
@@ -80,12 +82,22 @@ Flow:
 ```yaml
 ---
 name: help
-description: Show <plugin-name> plugin help
+description: (<plugin-name>) Plugin help
 allowed-tools: []
 ---
 ```
 
 Display a formatted help block with sections: plugin tagline, SKILLS/RECIPES (if applicable), COMMANDS list, and USAGE examples.
+
+### Command Description Prefix
+
+**Every command description MUST start with `(<plugin-name>)`** to disambiguate commands with the same name across plugins. Examples:
+
+- `(chad-tools) Multi-agent code review — local diff or PR`
+- `(exe-dev) List VMs with status`
+- `(gh-recipes) Request a new recipe`
+
+This prefix appears in the slash command picker and tells the user which plugin owns the command.
 
 ### Skill Writing Style
 

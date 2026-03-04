@@ -1,6 +1,6 @@
 ---
 name: help
-description: Show chad-tools plugin help
+description: (chad-tools) Plugin help
 allowed-tools: []
 ---
 
@@ -17,10 +17,13 @@ SKILLS (auto-activate based on context):
   resolve-reviews     Reply to PR review comments and resolve conversations
 
 COMMANDS:
-  /chad-tools:review         Multi-agent code review (auto-detects local changes or PR by number)
-  /chad-tools:pick-next      Prioritize open issues and launch worktrees
-  /chad-tools:audit-plugins  Review/test all plugins for accuracy
-  /chad-tools:add            Request a new skill (files an issue)
+  /chad-tools:review         Multi-agent code review (local diff or PR)
+  /chad-tools:deslop         Strip AI code slop from branch diff
+  /chad-tools:humanize       Rewrite prose to remove AI writing patterns
+  /chad-tools:done           Mark worktree done for cwprune
+  /chad-tools:pick-next      Pick next issue and launch worktree
+  /chad-tools:audit-plugins  Audit all marketplace plugins for accuracy
+  /chad-tools:add            Request a new feature (files an issue)
   /chad-tools:issue          Report a bug (gathers context, you review before filing)
   /chad-tools:help           This help text
 

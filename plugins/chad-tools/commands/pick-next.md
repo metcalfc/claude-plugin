@@ -1,6 +1,6 @@
 ---
 name: pick-next
-description: Suggest open issues to work on next and launch worktrees
+description: (chad-tools) Pick next issue and launch worktree
 allowed-tools:
   - Bash
   - AskUserQuestion

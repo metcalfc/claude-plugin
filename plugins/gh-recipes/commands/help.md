@@ -1,6 +1,6 @@
 ---
 name: help
-description: Show gh-recipes plugin help
+description: (gh-recipes) Plugin help
 allowed-tools: []
 ---
 

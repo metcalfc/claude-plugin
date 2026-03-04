@@ -1,6 +1,6 @@
 ---
 name: add
-description: Request a new chad-tools feature be added to the plugin
+description: (chad-tools) Request a new feature
 argument-hint: "<description of what's missing>"
 allowed-tools:
   - Bash

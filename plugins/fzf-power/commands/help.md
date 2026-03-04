@@ -1,6 +1,6 @@
 ---
 name: help
-description: Show fzf-power plugin help
+description: (fzf-power) Plugin help
 allowed-tools: []
 ---
 

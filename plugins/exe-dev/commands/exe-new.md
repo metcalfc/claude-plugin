@@ -1,10 +1,6 @@
 ---
 name: exe-new
-description: >-
-  Create a new exe.dev VM. Use when the user says "create a VM", "make a VM",
-  "spin up a VM", "new VM", "launch a VM", "start a new VM on exe", "make VMs
-  on exe", "set up an exe.dev machine", or any request to create, provision, or
-  launch exe.dev virtual machines.
+description: (exe-dev) Create a new VM
 argument-hint: "[--image=<image>]"
 allowed-tools:
   - Bash

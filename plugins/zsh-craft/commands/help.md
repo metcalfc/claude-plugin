@@ -1,6 +1,6 @@
 ---
 name: help
-description: Show zsh-craft plugin help
+description: (zsh-craft) Plugin help
 allowed-tools: []
 ---
 

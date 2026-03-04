@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Report a bug with claude-code-setup
+description: (claude-craft) Report a bug
 argument-hint: "<what went wrong>"
 allowed-tools:
   - Bash
@@ -8,7 +8,7 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-Report a bug with the claude-code-setup plugin. Gather context about the failure, sanitize it, and let the user review before filing.
+Report a bug with the claude-craft plugin. Gather context about the failure, sanitize it, and let the user review before filing.
 
 ## Step 1: Gather context
 
@@ -41,7 +41,7 @@ Before showing the draft to the user, scrub ALL of the following from the issue 
 Before drafting, search for existing open bug reports:
 
 ```bash
-gh issue list --repo metcalfc/claude-plugin --label "claude-code-setup,bug" --state open --json number,title --jq '.[] | "#\(.number) \(.title)"'
+gh issue list --repo metcalfc/claude-plugin --label "claude-craft,bug" --state open --json number,title --jq '.[] | "#\(.number) \(.title)"'
 ```
 
 If any existing issue looks related, show the user the matches and ask:
@@ -80,15 +80,15 @@ Do NOT file the issue until the user explicitly approves.
 ## Step 5: File the issue
 
 ```bash
-gh label create claude-code-setup --repo metcalfc/claude-plugin --description "claude-code-setup plugin" --color 0075ca 2>/dev/null
+gh label create claude-craft --repo metcalfc/claude-plugin --description "claude-craft plugin" --color 0075ca 2>/dev/null
 gh label create bug --repo metcalfc/claude-plugin --description "Something isn't working" --color d73a4a 2>/dev/null
 ```
 
 ```bash
 gh issue create \
   --repo metcalfc/claude-plugin \
-  --title "claude-code-setup: <short summary>" \
-  --label "claude-code-setup,bug" \
+  --title "claude-craft: <short summary>" \
+  --label "claude-craft,bug" \
   --body "<approved body>"
 ```
 

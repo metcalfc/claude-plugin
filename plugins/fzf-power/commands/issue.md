@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Report a bug with fzf-power
+description: (fzf-power) Report a bug
 argument-hint: "<what went wrong>"
 allowed-tools:
   - Bash

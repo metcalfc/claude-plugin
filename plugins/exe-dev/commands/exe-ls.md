@@ -1,9 +1,6 @@
 ---
 name: exe-ls
-description: >-
-  List exe.dev VMs with status. Use when the user says "list my VMs", "show my
-  VMs", "what VMs do I have", "exe.dev machines", or any request to see, list,
-  or check existing exe.dev virtual machines.
+description: (exe-dev) List VMs with status
 allowed-tools:
   - Bash
   - Read

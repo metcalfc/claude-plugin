@@ -1,6 +1,6 @@
 ---
 name: list
-description: List all available gh-recipes
+description: (gh-recipes) List all available recipes
 allowed-tools:
   - Read
   - Glob

@@ -1,6 +1,6 @@
 ---
 name: help
-description: Show exe-dev plugin help
+description: (exe-dev) Plugin help
 allowed-tools: []
 ---
 

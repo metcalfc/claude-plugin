@@ -1,13 +1,13 @@
 ---
 name: help
-description: Show claude-code-setup plugin help
+description: (claude-craft) Plugin help
 allowed-tools: []
 ---
 
 Display the following help text to the user:
 
 ```
-claude-code-setup — Claude Code CLI knowledge, plugin management, and guardrails
+claude-craft — Claude Code CLI knowledge, plugin management, and guardrails
 
 SKILLS (auto-activate based on context):
   claude-cli-knowledge          Correct CLI syntax, TTY limitations, /plugin commands,
@@ -22,9 +22,9 @@ HOOKS:
                                 - Running claude CLI commands that need a TTY
 
 COMMANDS:
-  /claude-code-setup:add       Request a new feature (files an issue)
-  /claude-code-setup:issue     Report a bug (gathers context, you review before filing)
-  /claude-code-setup:help      This help text
+  /claude-craft:add       Request a new feature (files an issue)
+  /claude-craft:issue     Report a bug (gathers context, you review before filing)
+  /claude-craft:help      This help text
 
 USAGE:
   Skills activate automatically when you work with Claude CLI commands or

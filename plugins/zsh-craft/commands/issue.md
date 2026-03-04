@@ -1,6 +1,6 @@
 ---
 name: issue
-description: Report a bug with zsh-craft
+description: (zsh-craft) Report a bug
 argument-hint: "<what went wrong>"
 allowed-tools:
   - Bash

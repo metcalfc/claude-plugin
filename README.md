@@ -18,6 +18,7 @@ claude plugin install gh-recipes
 claude plugin install fzf-power
 claude plugin install zsh-craft
 claude plugin install exe-dev
+claude plugin install claude-code-setup
 ```
 
 ```
@@ -181,6 +182,38 @@ Without this plugin, Claude doesn't know that `ssh exe.dev new` creates a VM, th
 
 ---
 
+## claude-code-setup
+
+**Teaches Claude the correct `claude` CLI commands and plugin management lifecycle.**
+
+Without this plugin, Claude says `claude plugins` (wrong — it's singular), uses `github:owner/repo` syntax (wrong — just `owner/repo`), tries to run interactive CLI commands inside a session (fails — no TTY), and doesn't bump plugin versions (users get stale cache). This plugin fixes all of that with a knowledge skill and a PreToolUse hook that catches mistakes before execution.
+
+### What it covers
+
+| Area | What Claude learns |
+|------|-------------------|
+| **CLI syntax** | Correct subcommands (`plugin` not `plugins`), correct flags, correct argument formats |
+| **TTY awareness** | Which commands need a terminal, which work headless, when to suggest `/plugin` instead |
+| **Marketplace ops** | `owner/repo` format (no `github:` prefix), `--sparse` for monorepos, `--scope` options |
+| **Version bumping** | Must bump in both `plugin.json` and marketplace registry, or users get stale cache |
+| **Automation recs** | Codebase analysis for hooks, skills, MCP servers, subagents, and plugins |
+
+### Hook
+
+**PreToolUse on Bash** — catches common mistakes before they execute:
+- `claude plugins` → `claude plugin` (singular)
+- `marketplace add github:owner/repo` → `marketplace add owner/repo`
+- Interactive commands that need a TTY
+- Deprecated `--mcp-debug` flag
+
+### Commands
+
+- `/claude-code-setup:add` — Request a new feature
+- `/claude-code-setup:issue` — Report a bug
+- `/claude-code-setup:help` — Plugin help
+
+---
+
 ## Contributing
 
 Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, duplicate issues are checked, and you review before anything gets filed.
@@ -191,6 +224,7 @@ Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or re
 /exe-dev:add Add support for VM snapshots
 /fzf-power:add Add a recipe for browsing AWS S3 buckets
 /zsh-craft:add Add coverage for zsh/curses TUI patterns
+/claude-code-setup:add Add coverage for claude mcp server management patterns
 ```
 
 Or open an issue directly at [github.com/metcalfc/claude-plugin/issues](https://github.com/metcalfc/claude-plugin/issues).

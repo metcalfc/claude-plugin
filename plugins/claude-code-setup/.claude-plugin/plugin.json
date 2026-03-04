@@ -1,0 +1,6 @@
+{
+  "name": "claude-code-setup",
+  "version": "0.1.0",
+  "description": "Claude Code CLI knowledge, plugin management guardrails, and automation recommendations",
+  "repository": "https://github.com/metcalfc/claude-plugin"
+}

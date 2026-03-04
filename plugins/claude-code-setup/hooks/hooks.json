@@ -1,0 +1,17 @@
+{
+  "description": "Catch common Claude CLI mistakes before execution",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the Bash tool is about to run a `claude` CLI command. Examine the command string for these issues:\n\n## 1. Wrong subcommand: \"claude plugins\" (plural)\nThe correct subcommand is `claude plugin` (singular). If you see `claude plugins`, return:\n```json\n{\"decision\": \"block\", \"reason\": \"Wrong subcommand: 'claude plugins' should be 'claude plugin' (singular). Corrected command: claude plugin ...\"}\n```\n\n## 2. Wrong marketplace add syntax: github: prefix\nThe `claude plugin marketplace add` command takes `owner/repo` format directly. No `github:` prefix. If you see `claude plugin marketplace add github:` or `claude plugin marketplace add \\\"github:`, return:\n```json\n{\"decision\": \"block\", \"reason\": \"Wrong syntax: 'claude plugin marketplace add github:owner/repo' should be 'claude plugin marketplace add owner/repo' — no github: prefix needed.\"}\n```\n\n## 3. TTY-required commands run inside Claude\nThe following claude subcommands require an interactive terminal (TTY) and will fail or hang when run from inside a Claude Code session via Bash tool:\n- `claude auth`\n- `claude setup-token`\n- `claude` (bare, starts interactive session)\n- `claude -r` / `claude --resume` (without -p)\n- `claude -c` / `claude --continue` (without -p)\n\nDo NOT block `claude -p` (print mode) or `claude --print` — those work without a TTY.\nDo NOT block `claude plugin ...` commands — those work fine.\nDo NOT block `claude mcp ...` commands — those work fine.\nDo NOT block `claude --version` or `claude -v` — those work fine.\nDo NOT block `claude doctor` — that works fine.\nDo NOT block `claude install` — that works fine.\nDo NOT block `claude update` or `claude upgrade` — those work fine.\n\nIf a TTY-requiring command is detected, return:\n```json\n{\"decision\": \"block\", \"reason\": \"This claude command needs an interactive terminal (TTY) and will fail inside a Claude Code session. Tell the user to run it in a separate terminal, or use the /plugin slash command for plugin operations.\"}\n```\n\n## 4. Deprecated flags\n- `--mcp-debug` is deprecated, use `--debug` instead. Return a systemMessage (don't block):\n```json\n{\"decision\": \"allow\", \"systemMessage\": \"Note: --mcp-debug is deprecated. Use --debug instead.\"}\n```\n\n## 5. Wrong subcommand: \"claude plugin add\"\n`claude plugin add` is not a command. The correct command is `claude plugin install`. Return:\n```json\n{\"decision\": \"block\", \"reason\": \"Wrong subcommand: 'claude plugin add' should be 'claude plugin install'.\"}\n```\n\nIf the command is not a `claude` CLI command, or is a valid claude command with correct syntax, return nothing (allow it to proceed).",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

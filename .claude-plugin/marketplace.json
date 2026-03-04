@@ -9,7 +9,7 @@
       "name": "chad-tools",
       "source": "./plugins/chad-tools",
       "description": "Chad's personal Claude Code skills and workflows",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "author": {
         "name": "Chad Metcalf"
       }
@@ -46,6 +46,15 @@
       "source": "./plugins/zsh-craft",
       "description": "Teaches Claude to write idiomatic zsh — modules, builtins, and parameter expansion instead of bash-in-disguise",
       "version": "0.2.0",
+      "author": {
+        "name": "Chad Metcalf"
+      }
+    },
+    {
+      "name": "claude-code-setup",
+      "source": "./plugins/claude-code-setup",
+      "description": "Claude Code CLI knowledge, plugin management guardrails, and automation recommendations",
+      "version": "0.1.0",
       "author": {
         "name": "Chad Metcalf"
       }

@@ -105,6 +105,19 @@ Display a formatted help block with sections: plugin tagline, SKILLS/RECIPES (if
 }
 ```
 
+### Version Bumping
+
+**Every commit that changes a plugin MUST bump its version** in both `plugin.json` and `marketplace.json`. The plugin manager uses the version to decide whether to update — if the version doesn't change, users won't get the new code.
+
+Follow semver:
+- **Patch** (0.1.0 → 0.1.1): bug fixes, doc corrections, minor tweaks
+- **Minor** (0.1.0 → 0.2.0): new commands, skills, agents, or significant feature changes
+- **Major** (0.x → 1.0, 1.x → 2.0): breaking changes to command behavior or plugin structure
+
+Both files must match:
+1. `plugins/<name>/.claude-plugin/plugin.json` — the `version` field
+2. `.claude-plugin/marketplace.json` — the `version` field for that plugin's entry
+
 ### Marketplace Registry
 
 When adding a new plugin, add an entry to `.claude-plugin/marketplace.json`:

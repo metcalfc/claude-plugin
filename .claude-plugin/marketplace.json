@@ -9,7 +9,7 @@
       "name": "chad-tools",
       "source": "./plugins/chad-tools",
       "description": "Chad's personal Claude Code skills and workflows",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "Chad Metcalf"
       }
@@ -18,7 +18,7 @@
       "name": "exe-dev",
       "source": "./plugins/exe-dev",
       "description": "exe.dev VM management — SSH CLI, HTTP proxy, sharing, and Shelley integration",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Chad Metcalf"
       }
@@ -27,7 +27,7 @@
       "name": "gh-recipes",
       "source": "./plugins/gh-recipes",
       "description": "Recipes for gh CLI operations that don't have built-in subcommands (milestones, branch protection, webhooks, etc.)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Chad Metcalf"
       }
@@ -36,7 +36,7 @@
       "name": "fzf-power",
       "source": "./plugins/fzf-power",
       "description": "Teaches Claude to use fzf's full power — preview windows, keybindings, theming, and advanced patterns instead of bare | fzf",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Chad Metcalf"
       }
@@ -45,7 +45,7 @@
       "name": "zsh-craft",
       "source": "./plugins/zsh-craft",
       "description": "Teaches Claude to write idiomatic zsh — modules, builtins, and parameter expansion instead of bash-in-disguise",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Chad Metcalf"
       }

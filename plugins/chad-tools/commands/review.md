@@ -8,6 +8,9 @@ allowed-tools:
   - Grep
   - Glob
   - Agent
+  - Edit
+  - Write
+  - AskUserQuestion
   - WebFetch
 ---
 
@@ -125,6 +128,28 @@ Conditionally launch others based on the diff content and changed file names:
   - **Ruby:** `class `, `module `, `include `, `extend `, `attr_accessor`, `attr_reader`
   - **General:** `abstract `, `sealed `
 
+### Rails-specific agents (from [compound-engineering](https://github.com/EveryInc/compound-engineering-plugin), MIT)
+
+These launch when the diff touches Ruby/Rails files (`.rb`, `.erb`, `Gemfile`, `config/routes.rb`):
+
+- **`rails-convention-reviewer`** — if any changed file is `.rb` or `.erb`:
+  - Checks for Rails Way violations, unnecessary abstractions, JS-world patterns
+
+- **`rails-security-reviewer`** — if any changed file is in `app/controllers/`, `app/models/`, `config/`, or touches auth/session logic:
+  - Rails-specific security: mass assignment, CSRF, SQL injection, auth bypass
+
+- **`rails-performance-reviewer`** — if any changed file is in `app/` or `lib/`:
+  - N+1 queries, missing indexes, unbounded queries, memory-heavy patterns
+
+- **`schema-drift-detector`** — if `db/schema.rb` is in the changed file list:
+  - Cross-references schema.rb changes against migrations in the diff
+
+- **`rails-data-reviewer`** — if any changed file is in `db/migrate/` or `app/models/`:
+  - Migration safety, transaction boundaries, referential integrity, PII exposure
+
+- **`rails-layering-advisor`** — if any changed file is `.rb` or `.erb`:
+  - One-way gates: patterns that are cheap to fix now but expensive after the app grows (auth sprawl, callback business logic, nested attributes, query duplication). Quantifies now-vs-later cost.
+
 Tell the user which agents will run (one short line).
 
 ## Step 4: Launch Review Agents
@@ -149,7 +174,29 @@ Parse the JSON array from each agent's response.
 **Tag each finding** with its source agent: prepend `[agent-name, confidence]` to the body.
 Example: `[silent-failure-hunter, 92] This catch block swallows...`
 
-## Step 6: Post or Report
+## Step 6: Triage and Act
+
+Categorize each filtered finding into one of four buckets:
+
+### Fix Now
+Small fixes that take under ~10 minutes — typos, missing error checks, obvious bugs, simple refactors. **Fix these immediately** using Edit/Write tools. Track what was fixed for the summary.
+
+### Call Out
+Larger issues that need the author's attention. These stay as review findings (inline comments on PR, or terminal output for local mode). No action taken — just reported.
+
+### Question
+Genuine questions about intent, design choices, or unclear code. Use **AskUserQuestion** to surface these during the review. Wait for answers before proceeding — the answer may change the triage of other findings.
+
+### File Issue
+Changes that should happen but are tangential to the current diff or have a high blast radius. Use **AskUserQuestion** to propose filing an issue:
+- Explain what needs to change and why
+- Note the blast radius or why it's tangential
+- Offer options: "File an issue", "Fix it now anyway", or "Skip"
+- If filing: `gh issue create --repo metcalfc/claude-plugin` with appropriate labels
+
+Process findings in this order: Questions first (answers inform triage), then Fix Now, then File Issue decisions, then Call Out items remain as review comments.
+
+## Step 7: Post or Report
 
 ### If a PR is involved (PR mode, or local mode with an open PR):
 
@@ -209,12 +256,16 @@ Report findings to the terminal, grouped by file:
 
 If no findings, tell the user the review is clean.
 
-## Step 7: Summary
+## Step 8: Summary
 
 Report to the user:
 - Scope reviewed (PR #N / unstaged / staged / last commit / etc.)
 - Which agents ran
 - How many raw findings vs. filtered findings
+- **Fixed now**: list what was fixed inline (file + one-line summary each)
+- **Called out**: count of review comments posted or shown
+- **Questions asked**: note any unresolved questions
+- **Issues filed**: links to any issues created
 - If PR: what was posted (event type, number of inline comments) + link to PR
 - If no PR: total findings shown
 

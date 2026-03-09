@@ -22,6 +22,7 @@ COMMANDS:
   /chad-tools:humanize       Rewrite prose to remove AI writing patterns
   /chad-tools:done           Mark worktree done for cwprune
   /chad-tools:pick-next      Pick next issue and launch worktree
+  /chad-tools:babysit-prs    Rebase conflict-blocked PRs, fix, review, push
   /chad-tools:audit-plugins  Audit all marketplace plugins for accuracy
   /chad-tools:add            Request a new feature (files an issue)
   /chad-tools:issue          Report a bug (gathers context, you review before filing)

@@ -14,6 +14,20 @@ allowed-tools:
 
 Analyze the current repository, detect its tech stack and existing tools, then interactively set up lefthook with git hooks that enforce code quality guardrails.
 
+## Step 0: Check for shared config
+
+Check if `.claude/lefthook.local.md` exists in the project root. If it does, read it and parse the YAML frontmatter.
+
+Expected fields:
+- `remote_repo` — Git URL for shared lefthook config (e.g., `https://github.com/org/lefthook-config`)
+- `remote_ref` — Branch/tag to use (default: `main`)
+- `remote_configs` — List of config files to pull (e.g., `["base.yml", "security.yml"]`)
+- `refetch_frequency` — How often to refetch (default: `"24h"`)
+
+If a shared config exists, the generated `lefthook.yml` in Step 6 MUST include a `remotes:` block pulling from it. The shared config provides baseline hooks — the user's local selections layer on top.
+
+If the file doesn't exist, skip this step and proceed normally.
+
 ## Step 1: Check prerequisites
 
 Check if lefthook is installed:
@@ -169,6 +183,22 @@ If the user passed a focus area argument (lint, format, test, all), pre-select t
 ## Step 6: Generate lefthook.yml
 
 Build the config using the user's selections. Follow these rules:
+
+### Shared remote config (if configured in Step 0)
+
+If `.claude/lefthook.local.md` specified a remote repo, add a `remotes:` block at the top of the config:
+
+```yaml
+remotes:
+  - git_url: <remote_repo>
+    ref: <remote_ref>
+    refetch: true
+    refetch_frequency: "<refetch_frequency>"
+    configs:
+      - <each config file from remote_configs>
+```
+
+The remote provides baseline hooks. Local jobs defined below add to or override them.
 
 ### General structure
 ```yaml

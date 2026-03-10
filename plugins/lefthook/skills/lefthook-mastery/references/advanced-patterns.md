@@ -76,6 +76,21 @@ remotes:
       - security.yml
 ```
 
+### Plugin integration
+
+If the user has configured a shared config via `/lefthook:setup`, it's stored in `.claude/lefthook.local.md`:
+
+```yaml
+---
+remote_repo: "https://github.com/org/lefthook-config"
+remote_ref: "main"
+remote_configs: ["base.yml", "security.yml"]
+refetch_frequency: "24h"
+---
+```
+
+When generating `lefthook.yml`, include the `remotes:` block from these settings. The shared config provides org-wide baseline hooks; local jobs layer on top.
+
 ## Extends
 
 Extend from local config files:

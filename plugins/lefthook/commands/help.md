@@ -16,6 +16,7 @@ SKILLS (auto-activate based on context):
 
 COMMANDS:
   /lefthook:punch     Analyze repo and interactively set up lefthook guardrails
+  /lefthook:setup     Configure a shared lefthook config repo for this project
   /lefthook:add       Request a new feature (files an issue)
   /lefthook:issue     Report a bug (gathers context, you review before filing)
   /lefthook:help      This help text
@@ -27,4 +28,12 @@ USAGE:
   Use /lefthook:punch in any repo to get an interactive setup wizard that
   detects your project type, finds existing linters/formatters/test runners,
   and generates a lefthook.yml with the hooks you choose.
+
+SHARED CONFIG:
+  If your org has a shared lefthook config repo, run:
+    /lefthook:setup https://github.com/org/lefthook-config
+
+  This saves settings to .claude/lefthook.local.md (not committed).
+  Then /lefthook:punch will include the shared config via `remotes:`
+  and layer project-specific hooks on top.
 ```

@@ -19,6 +19,7 @@ claude plugin install fzf-power
 claude plugin install zsh-craft
 claude plugin install exe-dev
 claude plugin install claude-craft
+claude plugin install lefthook
 ```
 
 ```
@@ -218,6 +219,30 @@ Without this plugin, Claude says `claude plugins` (wrong — it's singular), use
 
 ---
 
+## lefthook
+
+**Teaches Claude lefthook and sets up git hook guardrails interactively.**
+
+Without this plugin, Claude sometimes pushes code without running lint, format, or tests. With it, Claude knows how to configure lefthook to enforce code quality checks on every commit and push. The `/punch` command scans your repo, detects your tech stack and existing tools, and generates a `lefthook.yml` tailored to your project.
+
+### What it covers
+
+| Area | What Claude knows |
+|------|-------------------|
+| **Configuration** | Full `lefthook.yml` reference — hook types, job options, file placeholders, parallel/piped execution, output control |
+| **Hook recipes** | Ready-to-paste configs for 12+ languages: JS/TS, Python, Ruby, Go, Rust, Elixir, PHP, Shell, and cross-language patterns |
+| **Advanced patterns** | Monorepo setup, job groups, remote configs, Docker integration, YAML anchors, conditional execution, local overrides |
+| **Setup wizard** | Auto-detects linters, formatters, test runners, type checkers, and CI config — suggests hooks interactively |
+
+### Commands
+
+- `/lefthook:punch` — Analyze repo and interactively set up lefthook guardrails
+- `/lefthook:add` — Request a new feature
+- `/lefthook:issue` — Report a bug
+- `/lefthook:help` — Plugin help
+
+---
+
 ## Contributing
 
 Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or report a bug right from Claude Code — context is gathered automatically, sensitive data is scrubbed, duplicate issues are checked, and you review before anything gets filed.
@@ -229,6 +254,7 @@ Every plugin has `/help`, `/add`, and `/issue` commands. Request a feature or re
 /fzf-power:add Add a recipe for browsing AWS S3 buckets
 /zsh-craft:add Add coverage for zsh/curses TUI patterns
 /claude-craft:add Add coverage for claude mcp server management patterns
+/lefthook:add Add a recipe for Deno lint and fmt hooks
 ```
 
 Or open an issue directly at [github.com/metcalfc/claude-plugin/issues](https://github.com/metcalfc/claude-plugin/issues).

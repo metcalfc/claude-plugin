@@ -1,7 +1,7 @@
 ---
 name: audit-plugins
 description: (chad-tools) Audit all marketplace plugins for accuracy
-argument-hint: "[gh-recipes|exe-dev|fzf-power|zsh-craft|claude-craft|all]"
+argument-hint: "[gh-recipes|exe-dev|fzf-power|zsh-craft|claude-craft|lefthook|all]"
 allowed-tools:
   - Bash
   - Read
@@ -11,7 +11,7 @@ allowed-tools:
   - Task
 ---
 
-Run a review and test cycle on the gh-recipes, exe-dev, fzf-power, zsh-craft, and claude-craft plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
+Run a review and test cycle on the gh-recipes, exe-dev, fzf-power, zsh-craft, claude-craft, and lefthook plugins to verify recipes are still accurate and discover gaps. Default target is `all`.
 
 ## Workflow
 
@@ -135,6 +135,24 @@ If claude-craft is in scope:
 
 Report claude-craft results in the same table format.
 
-### 10. Recommended Actions
+### 10. Test lefthook
 
-If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add`, `/fzf-power:add`, `/zsh-craft:add`, or `/claude-craft:add`.
+If lefthook is in scope:
+
+1. Check `lefthook version` to verify lefthook is installed
+2. Verify the skill's configuration reference matches current lefthook behavior:
+   - Check that documented options (`parallel`, `piped`, `stage_fixed`, `glob`, `files`, etc.) are still valid
+   - Run `lefthook validate` on a sample config if available
+3. Test the `/punch` command's detection logic:
+   - Verify it detects common project files (package.json, go.mod, Gemfile, etc.)
+   - Verify it correctly identifies linters/formatters from devDependencies
+4. Cross-reference hook recipes against current tool versions:
+   - Check that ESLint, Prettier, RuboCop, Ruff, golangci-lint flags are still valid
+   - Verify commitlint and conventional commit regex patterns work
+5. Check for new lefthook features not yet documented in the skill
+
+Report lefthook results in the same table format.
+
+### 11. Recommended Actions
+
+If any recipes need updating, offer to fix them. If new recipes should be added, offer to create them or suggest running `/gh-recipes:add`, `/fzf-power:add`, `/zsh-craft:add`, `/claude-craft:add`, or `/lefthook:add`.

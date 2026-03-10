@@ -1,0 +1,6 @@
+{
+  "name": "lefthook",
+  "version": "0.1.0",
+  "description": "Lefthook expertise and interactive git hooks setup wizard",
+  "repository": "https://github.com/metcalfc/claude-plugin"
+}

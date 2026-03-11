@@ -1,6 +1,6 @@
 ---
-name: theme
-description: (fzf-power) Browse and apply color themes
+name: fzf-theme
+description: (fzf-power) Browse and apply fzf color themes
 allowed-tools:
   - Bash
   - Read

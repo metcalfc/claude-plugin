@@ -17,7 +17,7 @@ SKILLS (auto-activate based on context):
   resolve-reviews     Reply to PR review comments and resolve conversations
 
 COMMANDS:
-  /chad-tools:review         Multi-agent code review (local diff or PR)
+  /chad-tools:code-review    Multi-agent code review (local diff or PR)
   /chad-tools:deslop         Strip AI code slop from branch diff
   /chad-tools:humanize       Rewrite prose to remove AI writing patterns
   /chad-tools:done           Mark worktree done for cwprune

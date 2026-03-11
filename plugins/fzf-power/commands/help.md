@@ -25,7 +25,7 @@ REFERENCES (loaded as needed):
   examples          Real-world recipes: git, docker, k8s, processes, files
 
 COMMANDS:
-  /fzf-power:theme  Browse and apply fzf color themes
+  /fzf-power:fzf-theme  Browse and apply fzf color themes
   /fzf-power:add    Request a new fzf recipe or pattern (files an issue)
   /fzf-power:issue  Report a bug (gathers context, you review before filing)
   /fzf-power:help   This help text

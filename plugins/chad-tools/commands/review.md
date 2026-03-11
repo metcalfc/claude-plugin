@@ -150,6 +150,11 @@ These launch when the diff touches Ruby/Rails files (`.rb`, `.erb`, `Gemfile`, `
 - **`rails-layering-advisor`** — if any changed file is `.rb` or `.erb`:
   - One-way gates: patterns that are cheap to fix now but expensive after the app grows (auth sprawl, callback business logic, nested attributes, query duplication). Quantifies now-vs-later cost.
 
+### Cross-platform agents
+
+- **`platform-portability-reviewer`** — if any changed file is `.rs`, `.swift`, `.c`, `.h`, or touches IPC/SSH/protocol code:
+  - Catches platform lock-in: hardcoded Unix sockets, `SSH_AUTH_SOCK` assumptions, macOS-specific paths, heavy Swift business logic, streaming-only protocols, SQLite extension loading assumptions. Quantifies now-vs-later cost for Windows, iOS, and Android portability.
+
 Tell the user which agents will run (one short line).
 
 ## Step 4: Launch Review Agents

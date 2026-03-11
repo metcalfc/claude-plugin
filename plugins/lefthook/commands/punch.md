@@ -365,5 +365,32 @@ After setup, ask if the user wants any of these:
 
 - **Add `lefthook-local.yml` to `.gitignore`** — so devs can customize locally
 - **Add a `fix` group** — manual fixer that auto-corrects all files (not just staged)
-- **Add lefthook install to CI** — ensure hooks stay in sync
+- **Add lefthook install to CI** — ensure hooks stays in sync
 - **Commit the config** — commit lefthook.yml now
+
+## Step 9: Offer to update CLAUDE.md with hooks policy
+
+Check if a `CLAUDE.md` exists in the repo root. Use AskUserQuestion to offer:
+
+- **Update CLAUDE.md** — add a Git Hooks section documenting the hooks policy
+- **Skip** — don't touch CLAUDE.md
+
+If the user chooses to update, add (or update if a `## Git Hooks` section already exists) a section like this:
+
+```markdown
+## Git Hooks
+
+This project uses [lefthook](https://github.com/evilmartians/lefthook) for git hooks.
+
+Configured hooks:
+- **pre-commit**: <list the configured pre-commit jobs>
+- **commit-msg**: <list if configured>
+- **pre-push**: <list the configured pre-push jobs>
+
+**Policy:**
+- NEVER skip hooks (`--no-verify`, `LEFTHOOK=0`) without explicit user permission
+- If a hook fails, fix the underlying issue — do not bypass the hook
+- Local overrides go in `lefthook-local.yml` (not tracked by git)
+```
+
+Tailor the hook list to what was actually configured in Step 6. Only list hook stages that have jobs.

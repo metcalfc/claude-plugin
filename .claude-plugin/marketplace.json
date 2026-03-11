@@ -12,7 +12,7 @@
       "name": "chad-tools",
       "description": "Multi-agent code review, AI slop removal, worktree management, and dev workflow automation",
       "source": "./plugins/chad-tools",
-      "version": "1.6.1",
+      "version": "1.7.0",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"
@@ -22,7 +22,7 @@
       "name": "exe-dev",
       "description": "exe.dev VM management — SSH CLI, HTTP proxy, sharing, and Shelley integration",
       "source": "./plugins/exe-dev",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"
@@ -72,7 +72,7 @@
       "name": "lefthook",
       "description": "Lefthook expertise and interactive git hooks setup wizard — lint, format, test guardrails for any repo",
       "source": "./plugins/lefthook",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"

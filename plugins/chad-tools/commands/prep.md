@@ -11,7 +11,7 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-Rewrite GitHub issue bodies into a structured format optimized for autonomous AI execution. Supports single issues, umbrella/epic issues with sub-issues, and arbitrary ranges.
+Post structured execution plans as comments on GitHub issues, optimized for autonomous AI execution. Preserves the original issue body and links to the plan comment. Supports single issues, umbrella/epic issues with sub-issues, and arbitrary ranges.
 
 ## Step 1: Parse arguments
 
@@ -95,9 +95,9 @@ Construct a prompt with:
 - Repo tools context from Step 3
 - The structured format template (see below)
 
-### 5c: Rewrite the issue
+### 5c: Build the execution plan
 
-The rewrite should reorganize the issue into this exact structure, keeping all existing requirements and context — don't lose information:
+Build a structured execution plan from the issue, keeping all existing requirements and context — don't lose information:
 
 ```markdown
 ## Goal
@@ -124,19 +124,37 @@ One sentence: what does "done" look like?
 
 ### 5d: Review and confirm
 
-Show the proposed new issue body to the user via AskUserQuestion. Options:
-- **Update issue** — apply the rewrite
+Show the proposed execution plan to the user via AskUserQuestion. Options:
+- **Post plan** — add as a comment and link from the body
 - **Edit first** — let user provide feedback, then revise and ask again
 - **Skip** — don't update this issue
 
-### 5e: Apply the update
+### 5e: Post the plan as a comment and link from the body
+
+Post the execution plan as a comment on the issue:
 
 ```bash
-gh issue edit <number> --repo <repo> --body-file <(cat <<'BODY'
-<new body here>
+gh issue comment <number> --repo <repo> --body-file <(cat <<'BODY'
+## Execution Plan
+
+<plan content here>
 BODY
 )
 ```
+
+Then append a link to the plan comment at the bottom of the **original** issue body. Fetch the comment URL from the command output or via `gh api`, then update the body:
+
+```bash
+gh issue edit <number> --repo <repo> --body-file <(cat <<'BODY'
+<original body unchanged>
+
+---
+📋 [Execution plan](#issuecomment-<id>)
+BODY
+)
+```
+
+**Important:** The original issue body MUST be preserved verbatim. Only append the plan link after a horizontal rule.
 
 If the title starts with `WIP:`, strip that prefix:
 
@@ -156,7 +174,7 @@ Prep GitHub issue #<NUMBER> in repo <REPO> for autonomous AI execution.
 ## Repo Tools
 <repo tools context>
 
-Fetch the issue, rewrite its body into the structured prep format, show the user for review, and update it.
+Fetch the issue, build a structured execution plan, show the user for review, and post it as a comment on the issue (preserving the original body).
 ```
 
 The agent knows the structured format and the full workflow. Pass it everything it needs in the prompt.

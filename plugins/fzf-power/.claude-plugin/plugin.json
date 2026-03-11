@@ -1,6 +1,6 @@
 {
   "name": "fzf-power",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Teaches Claude to use fzf's full power — preview windows, keybindings, theming, and advanced patterns",
   "repository": "https://github.com/metcalfc/claude-plugin"
 }

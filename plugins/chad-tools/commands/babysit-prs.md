@@ -103,9 +103,9 @@ If the user says "Skip this PR", abort the rebase (`git rebase --abort`) and mov
 
 ### 2c: Review the Conflict Resolution
 
-Run `/review` on the changes introduced by the conflict resolution. The review scope is the diff between the original HEAD and the new rebased HEAD — use the commit range.
+Run `/code-review` on the changes introduced by the conflict resolution. The review scope is the diff between the original HEAD and the new rebased HEAD — use the commit range.
 
-If `/review` produces **Fix Now** items, fix them.
+If `/code-review` produces **Fix Now** items, fix them.
 
 ### 2d: Simplify Gate
 

@@ -1,5 +1,5 @@
 ---
-name: status
+name: exe-status
 description: (exe-dev) Quick VM health check
 allowed-tools:
   - Bash

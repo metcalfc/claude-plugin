@@ -4,7 +4,7 @@ A collection of plugins for [Claude Code](https://docs.anthropic.com/en/docs/cla
 
 **The problem:** Claude Code is good at general programming but has blind spots. It writes `bash` when you're in `zsh`. It uses bare `| fzf` without previews. It doesn't know `gh milestone list` isn't a real command. These plugins fix that by giving Claude domain-specific knowledge that activates automatically when relevant.
 
-**How plugins work:** Skills auto-activate based on context (mention a VM and exe-dev kicks in, write a zsh script and zsh-craft takes over). Commands are explicit (`/review`, `/exe-ls`). You install what you need — they're independent.
+**How plugins work:** Skills auto-activate based on context (mention a VM and exe-dev kicks in, write a zsh script and zsh-craft takes over). Commands are explicit (`/code-review`, `/exe-ls`). You install what you need — they're independent.
 
 ## Install
 
@@ -34,7 +34,7 @@ claude plugin install lefthook
 
 **Multi-agent code review and dev workflow automation.**
 
-The headline feature is `/review` — a single command that auto-detects what you've changed (unstaged, staged, last commit), selects the right review agents, runs them in parallel, and either posts a GitHub review (if a PR exists) or reports findings in your terminal. It also reviews PRs by number (`/review #123`).
+The headline feature is `/code-review` — a single command that auto-detects what you've changed (unstaged, staged, last commit), selects the right review agents, runs them in parallel, and either posts a GitHub review (if a PR exists) or reports findings in your terminal. It also reviews PRs by number (`/code-review #123`).
 
 Five specialized agents, each focused on a different aspect of code quality:
 
@@ -52,7 +52,7 @@ Agent selection uses comprehensive trigger patterns across Go, Rust, JS/TS, Pyth
 
 | Command | What it does |
 |---------|-------------|
-| `/chad-tools:review` | Multi-agent code review — local diff or PR |
+| `/chad-tools:code-review` | Multi-agent code review — local diff or PR |
 | `/chad-tools:deslop` | Strip AI code slop from branch diff |
 | `/chad-tools:humanize` | Rewrite prose to remove AI writing patterns |
 | `/chad-tools:done` | Mark worktree done for cwprune |
@@ -121,7 +121,7 @@ Without this plugin, Claude writes `something | fzf` and calls it a day. With it
 
 ### Commands
 
-- `/fzf-power:theme` — Browse and apply fzf color themes to your shell profile
+- `/fzf-power:fzf-theme` — Browse and apply fzf color themes to your shell profile
 - `/fzf-power:add` — Request a new recipe or pattern
 - `/fzf-power:issue` — Report a bug
 - `/fzf-power:help` — Plugin help
@@ -179,7 +179,7 @@ Without this plugin, Claude doesn't know that `ssh exe.dev new` creates a VM, th
 - `/exe-ls` — List VMs with status
 - `/exe-new` — Create a new VM
 - `/exe-share` — Share a VM
-- `/exe-dev:status` — Quick health check of all VMs
+- `/exe-dev:exe-status` — Quick health check of all VMs
 - `/exe-dev:add` — Request a new feature
 - `/exe-dev:issue` — Report a bug
 - `/exe-dev:help` — Plugin help

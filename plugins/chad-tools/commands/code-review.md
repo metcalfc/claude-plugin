@@ -189,6 +189,18 @@ Small fixes that take under ~10 minutes — typos, missing error checks, obvious
 ### Call Out
 Larger issues that need the author's attention. These stay as review findings (inline comments on PR, or terminal output for local mode). No action taken — just reported.
 
+**Use ` ```suggestion ` blocks** when the fix is obvious. GitHub renders these as clickable "Apply suggestion" buttons, letting the author accept with one click. Format:
+
+````
+```suggestion
+const fixed = "like this";
+```
+````
+
+Use suggestions for: typo fixes, missing null checks, naming improvements, simple refactors. Do NOT use suggestions for: architectural changes, multi-file fixes, or when the "right" fix is ambiguous — use plain text comments for those.
+
+For multi-line suggestions, include `start_line` to specify the range being replaced. The suggestion must contain the complete replacement for all lines in the range.
+
 ### Question
 Genuine questions about intent, design choices, or unclear code. Use **AskUserQuestion** to surface these during the review. Wait for answers before proceeding — the answer may change the triage of other findings.
 
@@ -201,7 +213,53 @@ Changes that should happen but are tangential to the current diff or have a high
 
 Process findings in this order: Questions first (answers inform triage), then Fix Now, then File Issue decisions, then Call Out items remain as review comments.
 
-## Step 7: Post or Report
+## Step 7: Review Preview & Approval
+
+**Before posting anything to GitHub**, show the user exactly what will be posted and get explicit approval.
+
+Use **AskUserQuestion** to present the complete review:
+
+1. **Event type**: APPROVE, REQUEST_CHANGES, or COMMENT (with reasoning)
+2. **Review body**: The 1-2 sentence summary
+3. **Each inline comment**, formatted as:
+   - File path and line number
+   - Agent tag and confidence
+   - Full comment body (including any ` ```suggestion ` blocks)
+4. **Fixed inline**: List of Fix Now items already applied (for context, not posted)
+
+Example preview format:
+
+```
+**Event:** REQUEST_CHANGES
+**Summary:** "Auth changes look solid but token validation has a bypass path that needs fixing."
+
+**Inline comments (3):**
+
+1. src/auth.ts:20 [code-reviewer, 95]
+   Token expiry check is missing — expired tokens pass validation.
+   ```suggestion
+   if (token.exp < Date.now() / 1000) {
+     throw new TokenExpiredError();
+   }
+   ```
+
+2. src/auth.ts:35 [silent-failure-hunter, 88]
+   This catch block swallows the connection error silently.
+
+3. tests/auth.test.ts:12 [pr-test-analyzer, 82]
+   Missing test for expired token rejection.
+
+**Already fixed inline (1):**
+- src/auth.ts:50 — fixed typo in error message
+```
+
+Options:
+- **Post it** — submit the review as shown
+- **Let me revise** — user provides feedback, adjust and re-preview
+
+**Skip this step** only in local mode with no PR (findings go to terminal only).
+
+## Step 8: Post or Report
 
 ### If a PR is involved (PR mode, or local mode with an open PR):
 
@@ -219,29 +277,63 @@ Determine review event:
 - `path`: the `file` field
 - `line`: the `line` field
 - `side`: `"RIGHT"`
-- `body`: the tagged finding body
+- `body`: the tagged finding body, with ` ```suggestion ` blocks where applicable
+- `start_line` (optional): for multi-line suggestions
 
-Post via GitHub API:
+**Always use the 2-step pending review pattern.** This batches all comments into one notification and is more robust — if step 2 fails, the pending review can be retried.
+
+Get the latest commit SHA first:
 ```bash
-gh api repos/{owner}/{repo}/pulls/{number}/reviews \
-  --method POST \
-  --input - <<'REVIEW'
-{
-  "event": "COMMENT|REQUEST_CHANGES|APPROVE",
-  "body": "Review summary here.",
-  "comments": [
-    {
-      "path": "file.rs",
-      "line": 42,
-      "side": "RIGHT",
-      "body": "[code-reviewer, 92] Description of issue."
-    }
-  ]
-}
-REVIEW
+gh pr view <number> --json commits --jq '.commits[-1].oid'
 ```
 
-If there are no inline comments, omit the `comments` array entirely.
+**Step 1: Create a PENDING review with all inline comments:**
+
+```bash
+gh api repos/{owner}/{repo}/pulls/{number}/reviews \
+  -X POST \
+  -f commit_id="<COMMIT_SHA>" \
+  -f 'comments[][path]=src/auth.ts' \
+  -F 'comments[][line]=20' \
+  -f 'comments[][side]=RIGHT' \
+  -f 'comments[][body]=[code-reviewer, 95] Token expiry check missing.
+
+```suggestion
+if (token.exp < Date.now() / 1000) {
+  throw new TokenExpiredError();
+}
+```' \
+  -f 'comments[][path]=src/auth.ts' \
+  -F 'comments[][line]=35' \
+  -f 'comments[][side]=RIGHT' \
+  -f 'comments[][body]=[silent-failure-hunter, 88] Catch block swallows connection error.' \
+  --jq '{id, state}'
+```
+
+This returns `{"id": <REVIEW_ID>, "state": "PENDING"}`.
+
+**Syntax rules:**
+- Use **single quotes** around parameters with `[]`: `'comments[][path]'`
+- Use **`-f`** for string values (path, side, body)
+- Use **`-F`** for numeric values (line, start_line)
+- For multi-line suggestions, include `start_line`: `-F 'comments[][start_line]=18'`
+
+**Step 2: Submit the pending review with event type and summary:**
+
+```bash
+gh api repos/{owner}/{repo}/pulls/{number}/reviews/<REVIEW_ID>/events \
+  -X POST \
+  -f event="REQUEST_CHANGES" \
+  -f body="Auth changes look solid but token validation has a bypass path that needs fixing."
+```
+
+If there are no inline comments, skip step 1 and post the review directly:
+```bash
+gh api repos/{owner}/{repo}/pulls/{number}/reviews \
+  -X POST \
+  -f event="APPROVE" \
+  -f body="Clean changes, no issues found."
+```
 
 ### If no PR:
 
@@ -261,7 +353,7 @@ Report findings to the terminal, grouped by file:
 
 If no findings, tell the user the review is clean.
 
-## Step 8: Summary
+## Step 9: Summary
 
 Report to the user:
 - Scope reviewed (PR #N / unstaged / staged / last commit / etc.)

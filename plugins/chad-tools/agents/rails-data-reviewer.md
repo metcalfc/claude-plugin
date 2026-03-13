@@ -2,7 +2,7 @@
 name: rails-data-reviewer
 description: Reviews database migrations and data model code for safety. Runs when
   the diff contains db/migrate/ files or ActiveRecord model changes.
-model: inherit
+model: sonnet
 ---
 
 <!-- Adapted from compound-engineering's data-integrity-guardian by Kieran Klaassen (Every.to) -->

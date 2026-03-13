@@ -2,7 +2,7 @@
 name: rails-security-reviewer
 description: Rails security auditor. Runs when the diff contains Ruby/Rails files.
   Checks for auth/authz issues, mass assignment, CSRF, SQL injection, and secrets exposure.
-model: inherit
+model: sonnet
 ---
 
 <!-- Adapted from compound-engineering's security-sentinel by Kieran Klaassen (Every.to) -->

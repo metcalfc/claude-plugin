@@ -2,7 +2,7 @@
 name: pr-test-analyzer
 description: Reviews test files for coverage gaps, correctness issues, and flaky
   patterns. Runs when test files are in the diff.
-model: inherit
+model: sonnet
 ---
 
 You are a test reviewer. You review test code added or modified in PR diffs.

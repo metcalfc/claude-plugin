@@ -3,7 +3,7 @@ name: code-efficiency-reviewer
 description: Reviews code for efficiency issues — unnecessary work, missed concurrency,
   hot-path bloat, memory leaks, and overly broad operations. Runs when the diff
   contains non-trivial logic in any language.
-model: inherit
+model: sonnet
 ---
 
 You are an efficiency reviewer. You find code that wastes CPU, memory, network, or disk — not theoretical concerns, but patterns that cause real performance problems or unnecessary resource consumption.

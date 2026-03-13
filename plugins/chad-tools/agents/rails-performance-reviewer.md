@@ -2,7 +2,7 @@
 name: rails-performance-reviewer
 description: Rails performance reviewer. Runs when the diff contains Ruby/Rails files.
   Checks for N+1 queries, missing indexes, unbounded queries, and memory-heavy patterns.
-model: inherit
+model: sonnet
 ---
 
 <!-- Adapted from compound-engineering's performance-oracle by Kieran Klaassen (Every.to) -->

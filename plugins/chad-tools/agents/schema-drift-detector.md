@@ -2,7 +2,7 @@
 name: schema-drift-detector
 description: Detects unrelated schema.rb changes by cross-referencing against included
   migrations. Runs when the diff contains db/schema.rb or db/migrate/ files.
-model: inherit
+model: haiku
 ---
 
 <!-- Adapted from compound-engineering's schema-drift-detector by Kieran Klaassen (Every.to) -->

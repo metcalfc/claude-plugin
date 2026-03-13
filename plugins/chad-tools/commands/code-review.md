@@ -155,6 +155,14 @@ These launch when the diff touches Ruby/Rails files (`.rb`, `.erb`, `Gemfile`, `
 - **`platform-portability-reviewer`** — if any changed file is `.rs`, `.swift`, `.c`, `.h`, or touches IPC/SSH/protocol code:
   - Catches platform lock-in: hardcoded Unix sockets, `SSH_AUTH_SOCK` assumptions, macOS-specific paths, heavy Swift business logic, streaming-only protocols, SQLite extension loading assumptions. Quantifies now-vs-later cost for Windows, iOS, and Android portability.
 
+### Efficiency and reuse agents
+
+- **`code-efficiency-reviewer`** — if the diff adds non-trivial logic (functions, loops, I/O operations, async code) in any language **except** Ruby/Rails files (which are covered by `rails-performance-reviewer`):
+  - Unnecessary work, missed concurrency, hot-path bloat, memory/resource leaks, overly broad operations, TOCTOU anti-patterns
+
+- **`code-reuse-reviewer`** — if the diff adds new functions or substantial logic blocks (> 10 lines of new non-test code):
+  - Searches the codebase for existing utilities that duplicate the new code. Flags exact duplicates and missed reuse opportunities.
+
 Tell the user which agents will run (one short line).
 
 ## Step 4: Launch Review Agents
@@ -173,17 +181,15 @@ Tell each agent to follow the instructions in its agent definition file and retu
   "status": "DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED",
   "summary": "one-line description of what the agent found or why it couldn't proceed",
   "findings": [],
-  "concerns": [],
-  "context_needed": "",
-  "blocked_reason": ""
+  "concerns": []
 }
 ```
 
 Status meanings:
 - **DONE**: Review complete, findings array has all results (may be empty for a clean review)
 - **DONE_WITH_CONCERNS**: Review complete, but the agent has meta-concerns (e.g., "the diff is too large to review thoroughly", "I couldn't determine the project's conventions"). Concerns go in `concerns[]`, findings go in `findings[]`
-- **NEEDS_CONTEXT**: Agent can't produce reliable findings without more information. `context_needed` describes what's missing (e.g., "need to see the test file for this module to assess coverage")
-- **BLOCKED**: Agent hit a hard stop and produced no findings. `blocked_reason` explains why (e.g., "diff is binary/unreadable", "language not supported")
+- **NEEDS_CONTEXT**: Agent can't produce reliable findings without more information. The `summary` field describes what's missing (e.g., "need to see the test file for this module to assess coverage")
+- **BLOCKED**: Agent hit a hard stop and produced no findings. The `summary` field explains why (e.g., "diff is binary/unreadable", "language not supported")
 
 ## Step 5: Collect and Filter Results
 

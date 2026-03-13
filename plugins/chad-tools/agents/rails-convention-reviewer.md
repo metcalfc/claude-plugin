@@ -81,6 +81,7 @@ Return a status envelope:
 ```
 
 Use `DONE` with an empty findings array if the code follows Rails conventions.
+Use `DONE_WITH_CONCERNS` if you completed the review but couldn't determine the project's convention baseline (e.g., no CLAUDE.md, unfamiliar framework extensions).
 Use `NEEDS_CONTEXT` if you need to see the project's existing patterns to judge convention compliance.
 Use `BLOCKED` if the diff contains no Ruby/Rails code to review.
 

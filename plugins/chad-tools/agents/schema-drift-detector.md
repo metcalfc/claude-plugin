@@ -77,6 +77,7 @@ Return a status envelope:
 ```
 
 Use `DONE` with an empty findings array if schema changes match migrations exactly.
+Use `DONE_WITH_CONCERNS` if you completed the review but couldn't fully cross-reference (e.g., complex multi-step migrations, uncertain column renames).
 Use `NEEDS_CONTEXT` if migrations reference tables not visible in the diff.
 Use `BLOCKED` if schema.rb is not in the diff.
 

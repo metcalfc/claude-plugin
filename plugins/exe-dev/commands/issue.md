@@ -79,8 +79,8 @@ Do NOT file the issue until the user explicitly approves.
 ## Step 5: File the issue
 
 ```bash
-gh label create exe-dev --repo metcalfc/claude-plugin --description "exe-dev plugin" --color 0075ca 2>/dev/null
-gh label create bug --repo metcalfc/claude-plugin --description "Something isn't working" --color d73a4a 2>/dev/null
+gh label create exe-dev --repo metcalfc/claude-plugin --description "exe-dev plugin" --color 0075ca || true
+gh label create bug --repo metcalfc/claude-plugin --description "Something isn't working" --color d73a4a || true
 ```
 
 ```bash

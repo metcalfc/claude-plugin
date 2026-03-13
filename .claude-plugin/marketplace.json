@@ -20,9 +20,9 @@
     },
     {
       "name": "exe-dev",
-      "description": "exe.dev VM management — SSH CLI, HTTP proxy, sharing, and Shelley integration",
+      "description": "exe.dev VM management — SSH CLI, HTTPS API, HTTP proxy, sharing, templates, and Shelley integration",
       "source": "./plugins/exe-dev",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"

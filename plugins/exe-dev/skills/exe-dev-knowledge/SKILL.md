@@ -12,15 +12,19 @@ description: >-
   "set up custom domain", "configure DNS", "LLM gateway", "proxy port",
   "send email from VM". Also triggers on SSH-related phrases:
   "SSH into my", "SSH proxy", "SSH to my VM", "ssh exe", "connect to my VM",
-  "remote into". Also triggers when the user mentions Shelley agent or
+  "remote into". Also triggers on API and tokens: "exe.dev API",
+  "exe0 token", "exe1 token", "API token", "programmatic access".
+  Also triggers on templates: "idea template", "exe.new", "VM template".
+  Also triggers on IDE integration: "vscode exe", "code server".
+  Also triggers when the user mentions Shelley agent or
   works with exe.dev infrastructure in any way. Provides comprehensive
-  knowledge of the exe.dev platform, SSH CLI, HTTP proxy, sharing,
-  custom domains, LLM gateway, email, and VM management.
+  knowledge of the exe.dev platform, SSH CLI, HTTPS API, HTTP proxy,
+  sharing, custom domains, LLM gateway, email, templates, and VM management.
 ---
 
 # exe.dev Platform Knowledge
 
-exe.dev is a subscription VM service. SSH **is** the CLI — there is no binary to install. VMs get persistent disks, instant HTTPS, and built-in auth.
+exe.dev is a subscription VM service. SSH **is** the CLI — there is no binary to install. VMs get persistent disks, instant HTTPS, and built-in auth. Also has an HTTPS API for programmatic access.
 
 ## Documentation
 
@@ -28,6 +32,11 @@ Upstream docs for the latest information:
 
 - Docs index: https://exe.dev/docs.md
 - All docs in one page: https://exe.dev/docs/all.md
+
+Detailed reference files in `references/`:
+- `api-tokens.md` — HTTPS API endpoint, exe0/exe1 token generation, VM-scoped tokens
+- `shelley-details.md` — Full Shelley capabilities, BYOK, subagents, skills, browser profiling
+- `idea-templates.md` — Template gallery, available templates, custom images
 
 The reference below covers the full platform. If something seems outdated, fetch the upstream docs.
 
@@ -64,14 +73,15 @@ ssh exe.dev ls --json                        # list VMs (JSON)
 ssh exe.dev rm <vmname>                      # delete VM
 ssh exe.dev restart <vmname>                 # restart VM
 ssh exe.dev rename <old> <new>               # rename VM
-ssh exe.dev cp <source> <dest>               # clone VM with disk
+ssh exe.dev cp <source> <dest>               # clone VM (copy-on-write, near-instant)
+ssh exe.dev tag <vmname> <tag>               # tag a VM
 ```
 
 ### Other Lobby Commands
 
 ```
 ssh exe.dev whoami                           # show account info
-ssh exe.dev ssh-key                          # manage SSH keys
+ssh exe.dev ssh-key                          # manage SSH keys (add/list)
 ssh exe.dev shelley install <vmname>         # upgrade Shelley agent
 ssh exe.dev browser <vmname>                 # open VM in browser
 ssh exe.dev help                             # show help
@@ -129,6 +139,7 @@ ssh exe.dev share add <vmname> <email>       # invite by email
 ssh exe.dev share add-link <vmname>          # generate share link
 ssh exe.dev share remove-link <vmname>       # revoke share link
 ssh exe.dev share remove <vmname> <email>    # revoke user access
+ssh exe.dev share show <vmname>              # view current sharing status
 ssh exe.dev share port <vmname> <port>       # change proxy port
 ```
 
@@ -142,7 +153,7 @@ TLS certificates provisioned automatically.
 
 ## LLM Gateway
 
-Built-in proxy to LLM providers at `http://169.254.169.254/gateway/llm/<provider>`. No API keys required. Included token allocation with subscription.
+Built-in proxy to LLM providers at `http://169.254.169.254/gateway/llm/<provider>`. No API keys required. Subscription includes monthly token allocation; additional tokens available as pay-as-you-go credits.
 
 Providers: `anthropic`, `openai`, `fireworks`
 
@@ -177,13 +188,51 @@ All three fields (`to`, `subject`, `body`) are required. `to` must match your re
 
 ## Shelley
 
-Web-based coding agent included on default exeuntu VMs. Accepts natural language tasks — installs software, builds sites, browses the web. Runs on port 9999, accessible at `https://<vmname>.shelley.exe.xyz/`. Uses the LLM Gateway by default (no API key needed), but supports custom credentials.
+Web-based, multi-modal coding agent on all default exeuntu VMs. Open source (github.com/boldsoftware/shelley). Runs on port 9999 at `https://<vmname>.shelley.exe.xyz/`.
 
-Customize behavior with guidance files (checked in priority order):
-- `~/.config/shelley/AGENTS.md` — personal config
-- `AGENTS.md`, `CLAUDE.md`, or `DEAR_LLM.md` — project-level, in git root or working directory
+Key capabilities: natural language task execution, browser tool with profiling, subagents with context continuation, skills system, conversation distillation (LLM-powered context optimization), diff viewer, HTML iframe output (Vega-Lite, etc.), shell commands in chat (`!bash`, `!git show HEAD`), multi-language support, self-upgrade from UI, BYOK (Anthropic, OpenAI, Gemini, z.ai) or LLM Gateway by default.
 
-Upgrade to latest: `ssh exe.dev shelley install <vmname>` (VMs ship the version from creation time).
+Guidance files (priority order): `~/.config/shelley/AGENTS.md` → `AGENTS.md` → `CLAUDE.md` → `DEAR_LLM.md`
+
+Upgrade: `ssh exe.dev shelley install <vmname>` or from Shelley's UI.
+
+See `references/shelley-details.md` for full feature documentation.
+
+## HTTPS API
+
+Programmatic VM management via `POST https://exe.dev/exec` with bearer token auth. The `args` array mirrors the SSH CLI:
+
+```bash
+curl -X POST https://exe.dev/exec \
+  -H "Authorization: Bearer exe0...." \
+  -H "Content-Type: application/json" \
+  -d '{"args": ["ls", "--json"]}'
+```
+
+Tokens (exe0 format) are generated locally by signing permissions JSON with your SSH key — no web UI needed. Supports expiration, command restrictions, and custom context. VM-scoped tokens work with Bearer and Basic auth (git-compatible).
+
+See `references/api-tokens.md` for token generation, permissions, and VM-scoped tokens.
+
+## Idea Templates
+
+Pre-configured VM templates at `exe.dev/idea` (also `exe.new/<template>`). Templates include a container image and a Shelley prompt that auto-configures the app with auth.
+
+Available: Gitea, VS Code, Ghost, Minecraft, Grafana, Outline, OpenClaw, Marimo, and more. Check `exe.dev/idea` for the current list.
+
+See `references/idea-templates.md` for details.
+
+## VSCode Integration
+
+Connect VS Code directly to a VM:
+```
+vscode://vscode-remote/ssh-remote+<vmname>.exe.xyz/home/exedev
+```
+
+Also available from the exe.dev dashboard.
+
+## Tab Completion
+
+VM name tab completion available for zsh, bash, and fish. Check upstream docs for setup instructions.
 
 ## SSH Configuration
 

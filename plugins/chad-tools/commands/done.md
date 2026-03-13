@@ -8,13 +8,26 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-Mark this worktree as done and ready for cleanup.
+Mark this worktree as done and ready for cleanup. **This command enforces completion gates — it will block until all gates pass.**
 
 1. First, check if we're in a git worktree by running `git rev-parse --is-inside-work-tree` and `git worktree list`. If the current directory is the main worktree (not a linked worktree), tell the user "Not in a worktree — nothing to mark done." and stop.
 
 2. Determine the issue number. Check for a `den-issue` file in the git worktree metadata directory (the path from `git rev-parse --git-dir`, then look for a `den-issue` file there). If found, read the issue number from it.
 
-3. Produce a structured summary. Review the work done in this session by looking at the git log for this branch (commits since diverging from the default branch). Organize the summary into these sections:
+3. **Completion gates** — check ALL of these before proceeding. If any gate fails, fix it and re-check. Do NOT skip gates or ask the user to skip them.
+
+   **Gate 1: CI is green.**
+   Run `gh pr checks $(gh pr view --json number --jq .number)` to check CI status. If any check is still running, wait and re-check. If any check has failed, investigate the failure (read the logs with `gh run view <id> --log-failed`), fix the issue, push, and re-check. Do not proceed with a red build.
+
+   **Gate 2: No merge conflicts.**
+   Run `git fetch origin main && git rebase origin/main`. If there are conflicts, resolve them, push the rebased branch, and re-verify CI (gate 1 again).
+
+   **Gate 3: Review feedback resolved.**
+   Run `gh api repos/{owner}/{repo}/pulls/{pr}/comments --jq '[.[] | select(.in_reply_to_id == null)] | length'` to check for review comments. If there are unresolved review threads, address every one: fix it, reject it with a reason, or file a tracking issue. Use /resolve-reviews to reply and resolve threads. "Acknowledged" or "will look at later" are not valid dispositions.
+
+   If all gates pass, tell the user: "All gates green — CI passing, no conflicts, reviews resolved."
+
+4. Produce a structured summary. Review the work done in this session by looking at the git log for this branch (commits since diverging from the default branch). Organize the summary into these sections:
 
    **## Summary**
    What was done — 2-3 bullet points max.

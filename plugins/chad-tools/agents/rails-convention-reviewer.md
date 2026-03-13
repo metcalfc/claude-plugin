@@ -55,7 +55,7 @@ Do NOT flag:
 - Patterns explicitly documented in CLAUDE.md as project conventions
 - Service objects with genuine cross-model orchestration logic
 - API endpoints that serve non-browser clients (CLI, mobile, agents)
-- Pre-existing patterns not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Test code
 
 ## Output Format

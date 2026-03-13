@@ -48,7 +48,7 @@ Assume tests are wrong until you've verified they test what they claim. The most
 Do NOT flag:
 - Test style preferences (naming conventions, test organization)
 - Missing tests for trivially simple code (getters, setters, constructors)
-- Pre-existing test issues not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Integration/e2e tests that intentionally hit real services
 - Test utilities and helpers (these are infrastructure, not tests)
 

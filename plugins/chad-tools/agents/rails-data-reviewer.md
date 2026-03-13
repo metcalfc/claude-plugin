@@ -56,7 +56,7 @@ Do NOT flag:
 - Migrations that explicitly document their irreversibility
 - `null: true` on genuinely optional fields
 - Missing `algorithm: :concurrently` on tables known to be small
-- Pre-existing schema issues not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 
 ## Output Format
 

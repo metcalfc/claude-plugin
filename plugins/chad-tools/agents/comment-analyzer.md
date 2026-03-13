@@ -47,7 +47,7 @@ Do NOT flag:
 - Internal/private functions without docstrings (not all code needs comments)
 - Comments that are correct and useful
 - Generated documentation (JSDoc from TypeScript types, rustdoc from signatures)
-- Pre-existing comments not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Style preferences (comment format, punctuation, capitalization)
 
 ## Output Format

@@ -68,7 +68,7 @@ Do NOT flag:
 - One-time scripts or migrations (performance is acceptable)
 - Code that already uses `includes` / `eager_load`
 - Bounded queries with explicit limits
-- Pre-existing patterns not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Test code
 
 ## Output Format

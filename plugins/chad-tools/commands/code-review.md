@@ -260,15 +260,19 @@ Collect and filter results using the same process as Step 5 (status handling, co
 
 ## Step 8: Triage and Act
 
-Categorize each filtered finding into one of four buckets:
+Every filtered finding gets exactly one of three outcomes:
+
+### Reject
+The finding doesn't apply. State why — the pattern is intentional, the agent misread the
+code, or the concern doesn't hold in this context. Rejected findings are NOT posted as
+review comments. Track rejections for the summary (agent name + one-line reason).
 
 ### Fix Now
-Small fixes that take under ~10 minutes — typos, missing error checks, obvious bugs, simple refactors. **Fix these immediately** using Edit/Write tools. Track what was fixed for the summary.
+The finding is valid. Fix it immediately using Edit/Write tools, regardless of size.
+"Pre-existing" is not a reason to skip — if the file is in the diff, broken windows
+get fixed. Track what was fixed for the summary.
 
-### Call Out
-Larger issues that need the author's attention. These stay as review findings (inline comments on PR, or terminal output for local mode). No action taken — just reported.
-
-**Use ` ```suggestion ` blocks** when the fix is obvious. GitHub renders these as clickable "Apply suggestion" buttons, letting the author accept with one click. Format:
+**Use ` ```suggestion ` blocks** when posting review comments for fixes that are obvious but belong to the PR author. GitHub renders these as clickable "Apply suggestion" buttons. Format:
 
 ````
 ```suggestion
@@ -280,17 +284,22 @@ Use suggestions for: typo fixes, missing null checks, naming improvements, simpl
 
 For multi-line suggestions, include `start_line` to specify the range being replaced. The suggestion must contain the complete replacement for all lines in the range.
 
-### Question
-Genuine questions about intent, design choices, or unclear code. Use **AskUserQuestion** to surface these during the review. Wait for answers before proceeding — the answer may change the triage of other findings.
-
 ### File Issue
-Changes that should happen but are tangential to the current diff or have a high blast radius. Use **AskUserQuestion** to propose filing an issue:
-- Explain what needs to change and why
-- Note the blast radius or why it's tangential
-- Offer options: "File an issue", "Fix it now anyway", or "Skip"
-- If filing: `gh issue create --repo metcalfc/claude-plugin` with appropriate labels
+The finding is valid but the fix touches enough code to warrant its own PR (blast radius).
+This is about review safety, not effort avoidance — the fix needs its own review cycle.
+Use AskUserQuestion to confirm, then file: `gh issue create --repo metcalfc/claude-plugin` with appropriate labels.
 
-Process findings in this order: Questions first (answers inform triage), then Fix Now, then File Issue decisions, then Call Out items remain as review comments.
+**Not valid outcomes:**
+- "Skipped" / "nice-to-have" / "too small to fix" — if it's valid, fix it
+- "Pre-existing" — if the file is in the diff, it's in scope
+- "Call out" with no action — don't post a comment you aren't going to address
+
+### Questions
+Genuine questions about intent or design go through AskUserQuestion before triage.
+The answer determines whether the related finding is rejected or accepted.
+
+Process findings in this order: Questions first (answers inform triage), then Fix Now,
+then File Issue decisions. Rejected findings are noted in the summary but not posted.
 
 ## Step 9: Review Preview & Approval
 
@@ -455,3 +464,5 @@ Report to the user:
 - **No [Required]/[Optional] labels.** If you wrote it, it matters. If it doesn't, delete it.
 - **Security + correctness = blocking.** Architecture = blocking if mismatched. Style = never blocking alone.
 - **Questions are real questions** that need answers, not suggestions.
+- **No skipping.** If a finding passed the confidence filter and isn't rejected, it gets fixed or filed. "Pre-existing", "too small", and "nice-to-have" are not valid reasons to skip.
+- **Broken windows get fixed.** If a file is in the diff, everything in it is in scope.

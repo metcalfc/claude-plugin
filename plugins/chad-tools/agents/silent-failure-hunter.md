@@ -54,7 +54,7 @@ Do NOT flag:
 - Best-effort operations where failure is acceptable (telemetry, analytics, optional features)
 - Error handling in test code that's testing error paths
 - Framework-provided error boundaries (React error boundaries, middleware error handlers)
-- Pre-existing error handling not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 
 ## Output Format
 

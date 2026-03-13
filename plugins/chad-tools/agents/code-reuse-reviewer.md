@@ -48,7 +48,7 @@ Report the existing code's location (file + line) when flagging a reuse opportun
 ## False Positive Awareness
 
 Do NOT flag:
-- Pre-existing duplication not introduced in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Test utilities that intentionally duplicate production code for isolation
 - Boilerplate required by frameworks (route handlers, migration structure, etc.)
 - Small inline expressions (< 3 lines) unless an exact utility exists

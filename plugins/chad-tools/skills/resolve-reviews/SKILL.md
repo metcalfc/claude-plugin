@@ -18,10 +18,16 @@ Reply to and resolve PR review comments on the current branch's PR.
 3. Get the repo owner and name:
    `gh repo view --json owner,name --jq '{owner: .owner.login, name: .name}'`
 
-4. For each comment, determine its status:
+4. For each comment, determine its disposition:
    - Read the recent git log to find which commits address the finding
    - Check the actual code to verify the fix is in place
-   - Classify as: "Fixed in {commit_sha}" with a brief explanation, or "Not yet addressed" if the fix is missing
+   - **Fixed**: identify the commit that addresses it. Reply: "Fixed in {sha}. {brief explanation}"
+   - **Rejected**: the finding doesn't apply. Reply: "Not applicable — {reason}."
+   - **Issue filed**: the fix warrants its own PR. Reply: "Tracked in #{issue}. {why separate}"
+
+   There is no "acknowledged" or "will look at later" disposition. Every comment must be
+   either fixed, rejected with a reason, or tracked in an issue. If a comment is not yet
+   addressed and it's valid, fix it before resolving the thread.
 
 5. Reply to each comment via the API:
    `gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies -f body="..."`

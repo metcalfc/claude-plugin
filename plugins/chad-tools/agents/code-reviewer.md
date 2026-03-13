@@ -45,7 +45,7 @@ Assume the author believed this code was correct. Your job is to find what they 
 ## False Positive Awareness
 
 Do NOT flag:
-- Pre-existing issues not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Issues that linters/formatters would catch automatically
 - Style preferences without correctness impact
 - Intentional trade-offs documented in comments or PR body

@@ -57,7 +57,7 @@ Assume every loop, every allocation, and every I/O call is more expensive than t
 ## False Positive Awareness
 
 Do NOT flag:
-- Pre-existing patterns not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Micro-optimizations that don't matter at the actual scale (premature optimization)
 - Code clarity tradeoffs where the "efficient" version is significantly harder to read and the path isn't hot
 - Test code, scripts, or one-off tooling where performance doesn't matter

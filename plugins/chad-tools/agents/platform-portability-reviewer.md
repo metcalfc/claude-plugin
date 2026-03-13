@@ -165,7 +165,7 @@ Target platforms: macOS (now), iOS (Phase 2), Linux (Phase 3), Android (Phase 4)
 ## False Positive Awareness
 
 Do NOT flag:
-- Pre-existing patterns not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Platform-specific code properly gated with `#[cfg()]` or equivalent
 - Test code or development tooling
 - Comments or documentation mentioning platform-specific concepts

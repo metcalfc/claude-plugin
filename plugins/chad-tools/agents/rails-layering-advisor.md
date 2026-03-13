@@ -111,7 +111,7 @@ For every finding, you MUST quantify the trade-off: what it costs to fix now vs.
 - Models with more than 3 concerns included
 - Models with more than 10 public methods
 
-**Don't flag in this diff unless the diff is adding to the model.** Pre-existing size is not actionable in a feature PR.
+**Only flag if the diff is adding to the model.** If a file is in the diff, its size is in scope.
 
 ## How to Quantify
 
@@ -133,7 +133,7 @@ Do NOT flag:
 - Code that's explicitly documented as intentional in CLAUDE.md
 - Simple CRUD with no authorization complexity
 - Early-stage apps with < 5 models (unless the pattern is truly high-cost like `accepts_nested_attributes_for`)
-- Pre-existing patterns not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 
 ## Output Format
 

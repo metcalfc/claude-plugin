@@ -70,7 +70,7 @@ Do NOT flag:
 - API controllers that legitimately use `:null_session` for token auth
 - Admin-only controllers behind proper authorization
 - Test/development-only code gated by `Rails.env`
-- Pre-existing issues not changed in this diff
+- Pre-existing issues in **unchanged** code not touched by this diff (files not in the changed file list)
 - Intentional `skip_forgery_protection` with API token auth documented
 
 ## Output Format

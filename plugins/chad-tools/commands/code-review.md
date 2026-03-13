@@ -166,9 +166,37 @@ Launch all selected agents **in parallel** using the Agent tool. Each agent rece
 - Any CLAUDE.md content found
 - The PR title and body (if a PR is involved)
 
-Tell each agent to follow the instructions in its agent definition file and return findings as the specified JSON array.
+Tell each agent to follow the instructions in its agent definition file and return its response using the **status envelope format**:
+
+```json
+{
+  "status": "DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED",
+  "summary": "one-line description of what the agent found or why it couldn't proceed",
+  "findings": [],
+  "concerns": [],
+  "context_needed": "",
+  "blocked_reason": ""
+}
+```
+
+Status meanings:
+- **DONE**: Review complete, findings array has all results (may be empty for a clean review)
+- **DONE_WITH_CONCERNS**: Review complete, but the agent has meta-concerns (e.g., "the diff is too large to review thoroughly", "I couldn't determine the project's conventions"). Concerns go in `concerns[]`, findings go in `findings[]`
+- **NEEDS_CONTEXT**: Agent can't produce reliable findings without more information. `context_needed` describes what's missing (e.g., "need to see the test file for this module to assess coverage")
+- **BLOCKED**: Agent hit a hard stop and produced no findings. `blocked_reason` explains why (e.g., "diff is binary/unreadable", "language not supported")
 
 ## Step 5: Collect and Filter Results
+
+### Handle agent statuses
+
+For each agent response:
+
+- **DONE**: Process findings normally (continue to filtering)
+- **DONE_WITH_CONCERNS**: Process findings normally, but collect concerns to surface in the summary (Step 9)
+- **NEEDS_CONTEXT**: Surface to the user via AskUserQuestion — the agent needs help. Include the agent name and what it needs. The user can provide context (re-run the agent with it) or skip that agent.
+- **BLOCKED**: Note in the summary that this agent couldn't run and why. Do not treat as a failure — just report it.
+
+### Filter findings
 
 Parse the JSON array from each agent's response.
 
@@ -357,7 +385,9 @@ If no findings, tell the user the review is clean.
 
 Report to the user:
 - Scope reviewed (PR #N / unstaged / staged / last commit / etc.)
-- Which agents ran
+- Which agents ran and their statuses
+- **Blocked agents**: if any agent reported BLOCKED, note which and why
+- **Agent concerns**: if any agent reported DONE_WITH_CONCERNS, list the concerns
 - How many raw findings vs. filtered findings
 - **Fixed now**: list what was fixed inline (file + one-line summary each)
 - **Called out**: count of review comments posted or shown

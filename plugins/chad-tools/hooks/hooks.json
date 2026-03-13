@@ -1,0 +1,8 @@
+{
+  "hooks": [
+    {
+      "type": "SessionStart",
+      "command": ".claude-plugin/hooks/session-start.sh"
+    }
+  ]
+}

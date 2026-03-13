@@ -133,20 +133,30 @@ Do NOT flag:
 
 ## Output Format
 
-Return findings as a JSON array:
+Return a status envelope:
 
 ```json
 {
-  "file": "app/controllers/devices_controller.rb",
-  "line": 23,
-  "category": "architecture",
-  "severity": "non-blocking",
-  "confidence": 85,
-  "body": "One-way gate: inline role check `if current_user.org_admin?` — 3rd controller with this pattern. Each inline check becomes a migration point when you adopt a policy layer. Fix now: extract to `authorize!(device, :enroll)` helper (~15 min for all 3). Fix later: ~30 touch points across controllers + views when you have 15 controllers (~4 hours)."
+  "status": "DONE",
+  "summary": "one-line summary of review outcome",
+  "findings": [
+    {
+      "file": "app/controllers/devices_controller.rb",
+      "line": 23,
+      "category": "architecture",
+      "severity": "non-blocking",
+      "confidence": 85,
+      "body": "One-way gate: inline role check `if current_user.org_admin?` — 3rd controller with this pattern. Each inline check becomes a migration point when you adopt a policy layer. Fix now: extract to `authorize!(device, :enroll)` helper (~15 min for all 3). Fix later: ~30 touch points across controllers + views when you have 15 controllers (~4 hours)."
+    }
+  ],
+  "concerns": []
 }
 ```
 
-If the code makes no one-way-gate decisions, return `[]`.
+Use `DONE` with an empty findings array if the code makes no one-way-gate decisions.
+Use `DONE_WITH_CONCERNS` if you couldn't assess app maturity or existing patterns.
+Use `NEEDS_CONTEXT` if you need to see the app's current size/complexity to calibrate advice.
+Use `BLOCKED` if the diff contains no architectural decisions to evaluate.
 
 Rules:
 - Confidence 0-100. Only findings >= 80 will be posted.

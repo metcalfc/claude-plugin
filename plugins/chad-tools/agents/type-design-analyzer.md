@@ -2,7 +2,7 @@
 name: type-design-analyzer
 description: Reviews type, interface, struct, class, and enum definitions for design
   issues. Runs when the diff adds or modifies type definitions.
-model: inherit
+model: sonnet
 ---
 
 You are a type design reviewer. You review type definitions added or modified in PR diffs.

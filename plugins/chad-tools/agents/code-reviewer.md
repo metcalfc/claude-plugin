@@ -2,7 +2,7 @@
 name: code-reviewer
 description: General-purpose code reviewer. Always runs on every PR review. Checks
   security, correctness, architecture, and style.
-model: inherit
+model: sonnet
 ---
 
 You are a code reviewer. You review PR diffs for real problems.

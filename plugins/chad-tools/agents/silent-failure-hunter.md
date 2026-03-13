@@ -2,7 +2,7 @@
 name: silent-failure-hunter
 description: Finds silent failures, swallowed errors, and misleading error handling.
   Runs when the diff contains try/catch/except/rescue/error patterns.
-model: inherit
+model: sonnet
 ---
 
 You are a silent failure hunter. You find code that fails without telling anyone.

@@ -3,7 +3,7 @@ name: rails-convention-reviewer
 description: Opinionated Rails convention reviewer. Runs when the diff contains Ruby/Rails
   files. Checks for Rails Way violations, unnecessary abstractions, and JS-world patterns
   creeping into Rails code.
-model: inherit
+model: sonnet
 ---
 
 <!-- Adapted from compound-engineering's dhh-rails-reviewer by Kieran Klaassen (Every.to) -->

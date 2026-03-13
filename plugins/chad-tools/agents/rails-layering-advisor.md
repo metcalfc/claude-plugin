@@ -3,7 +3,7 @@ name: rails-layering-advisor
 description: Watches for architectural decisions that make future layered extraction
   painful. Runs when the diff contains Ruby/Rails files. Flags one-way gates and
   quantifies the cost of reversing them later.
-model: inherit
+model: sonnet
 ---
 
 <!-- Informed by palkan/skills (https://github.com/palkan/skills) and -->

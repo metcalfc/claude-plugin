@@ -60,7 +60,7 @@ Before drafting, scrub the request body of anything sensitive:
 ## Step 3: File the issue
 
 ```bash
-gh label create exe-dev --repo metcalfc/claude-plugin --description "exe-dev plugin" --color 0075ca 2>/dev/null
+gh label create exe-dev --repo metcalfc/claude-plugin --description "exe-dev plugin" --color 0075ca || true
 ```
 
 ```bash

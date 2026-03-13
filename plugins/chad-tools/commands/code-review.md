@@ -1,7 +1,7 @@
 ---
 name: code-review
 description: (chad-tools) Multi-agent code review — local diff or PR
-argument-hint: "[#PR|unstaged|staged|last|HEAD~N|<file>...]"
+argument-hint: "[--fast] [#PR|unstaged|staged|last|HEAD~N|<file>...]"
 allowed-tools:
   - Bash
   - Read
@@ -16,9 +16,11 @@ allowed-tools:
 
 Review code using the specialized agent fleet. Works on local changes (auto-detected) or a specific PR by number.
 
+Agents run in two sequential passes by default: Pass 1 checks correctness, Pass 2 checks design. If Pass 1 finds blocking issues, Pass 2 is skipped — fix the bugs before worrying about style. Use `--fast` to run all agents in parallel (single pass, current behavior).
+
 ## Step 1: Determine Mode
 
-Check `$ARGUMENTS` to decide between **PR mode** and **local mode**.
+Check `$ARGUMENTS` for `--fast` flag first. If present, set `fast_mode = true` and strip it from arguments before further processing. Then decide between **PR mode** and **local mode**.
 
 ### PR mode — if the argument is a PR number or URL:
 
@@ -165,9 +167,37 @@ These launch when the diff touches Ruby/Rails files (`.rb`, `.erb`, `Gemfile`, `
 
 Tell the user which agents will run (one short line).
 
-## Step 4: Launch Review Agents
+### Classify into passes
 
-Launch all selected agents **in parallel** using the Agent tool. Each agent receives:
+Unless `fast_mode` is set, classify each selected agent into its pass:
+
+**Pass 1 — "Is it correct?"** (always runs):
+- `code-reviewer`
+- `silent-failure-hunter`
+- `pr-test-analyzer`
+- `schema-drift-detector`
+- `rails-data-reviewer`
+- `rails-security-reviewer`
+- `code-efficiency-reviewer`
+
+**Pass 2 — "Is it well-designed?"** (gated on Pass 1):
+- `comment-analyzer`
+- `type-design-analyzer`
+- `rails-convention-reviewer`
+- `rails-performance-reviewer`
+- `rails-layering-advisor`
+- `code-reuse-reviewer`
+- `platform-portability-reviewer`
+
+Tell the user which agents are in each pass (or "Fast mode — all agents in parallel" if `fast_mode`).
+
+## Step 4: Launch Pass 1 Agents
+
+**If `fast_mode`:** Launch ALL selected agents in parallel (skip to Step 5 after collecting results). Note in output: "Fast mode — all agents ran in parallel."
+
+**Otherwise:** Launch only Pass 1 agents in parallel using the Agent tool.
+
+Each agent receives:
 
 - The full diff
 - The changed file list
@@ -191,14 +221,14 @@ Status meanings:
 - **NEEDS_CONTEXT**: Agent can't produce reliable findings without more information. The `summary` field describes what's missing (e.g., "need to see the test file for this module to assess coverage")
 - **BLOCKED**: Agent hit a hard stop and produced no findings. The `summary` field explains why (e.g., "diff is binary/unreadable", "language not supported")
 
-## Step 5: Collect and Filter Results
+## Step 5: Collect and Filter Pass 1 Results
 
 ### Handle agent statuses
 
 For each agent response:
 
 - **DONE**: Process findings normally (continue to filtering)
-- **DONE_WITH_CONCERNS**: Process findings normally, but collect concerns to surface in the summary (Step 9)
+- **DONE_WITH_CONCERNS**: Process findings normally, but collect concerns to surface in the summary (Step 11)
 - **NEEDS_CONTEXT**: Surface to the user via AskUserQuestion — the agent needs help. Include the agent name and what it needs. The user can provide context (re-run the agent with it) or skip that agent.
 - **BLOCKED**: Note in the summary that this agent couldn't run and why. Do not treat as a failure — just report it.
 
@@ -213,7 +243,22 @@ Parse the JSON array from each agent's response.
 **Tag each finding** with its source agent: prepend `[agent-name, confidence]` to the body.
 Example: `[silent-failure-hunter, 92] This catch block swallows...`
 
-## Step 6: Triage and Act
+**If `fast_mode`:** Skip Steps 6–7, jump directly to Step 8 (Triage and Act) with all filtered findings.
+
+## Step 6: Gate Decision
+
+Evaluate filtered Pass 1 findings:
+
+- **If any Pass 1 finding has `severity: "blocking"`** → set `pass2_skipped = true`. Tell the user: "Pass 2 skipped — fix blocking correctness issues first. Agents not run: [list Pass 2 agents that were selected]."
+- **Otherwise** → proceed to Step 7.
+
+## Step 7: Launch Pass 2 Agents
+
+Launch Pass 2 agents in parallel using the Agent tool. Each agent receives the same context as Pass 1 (diff, file list, CLAUDE.md, PR metadata).
+
+Collect and filter results using the same process as Step 5 (status handling, confidence >= 80 filter, dedup, agent tagging). Merge Pass 2 findings with Pass 1 findings.
+
+## Step 8: Triage and Act
 
 Categorize each filtered finding into one of four buckets:
 
@@ -247,7 +292,7 @@ Changes that should happen but are tangential to the current diff or have a high
 
 Process findings in this order: Questions first (answers inform triage), then Fix Now, then File Issue decisions, then Call Out items remain as review comments.
 
-## Step 7: Review Preview & Approval
+## Step 9: Review Preview & Approval
 
 **Before posting anything to GitHub**, show the user exactly what will be posted and get explicit approval.
 
@@ -293,7 +338,7 @@ Options:
 
 **Skip this step** only in local mode with no PR (findings go to terminal only).
 
-## Step 8: Post or Report
+## Step 10: Post or Report
 
 ### If a PR is involved (PR mode, or local mode with an open PR):
 
@@ -387,10 +432,12 @@ Report findings to the terminal, grouped by file:
 
 If no findings, tell the user the review is clean.
 
-## Step 9: Summary
+## Step 11: Summary
 
 Report to the user:
 - Scope reviewed (PR #N / unstaged / staged / last commit / etc.)
+- **Pass structure**: "Pass 1: N agents, Pass 2: M agents" (or "Pass 2: skipped" or "Fast mode: all N agents in parallel")
+- If Pass 2 was skipped: explain why (blocking findings in Pass 1) and list which agents didn't run
 - Which agents ran and their statuses
 - **Blocked agents**: if any agent reported BLOCKED, note which and why
 - **Agent concerns**: if any agent reported DONE_WITH_CONCERNS, list the concerns

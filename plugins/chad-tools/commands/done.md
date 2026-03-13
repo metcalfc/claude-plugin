@@ -12,7 +12,10 @@ Mark this worktree as done and ready for cleanup. **This command enforces comple
 
 1. First, check if we're in a git worktree by running `git rev-parse --is-inside-work-tree` and `git worktree list`. If the current directory is the main worktree (not a linked worktree), tell the user "Not in a worktree — nothing to mark done." and stop.
 
-2. Determine the issue number. Check for a `den-issue` file in the git worktree metadata directory (the path from `git rev-parse --git-dir`, then look for a `den-issue` file there). If found, read the issue number from it.
+2. **Detect worktree mode.** Check for a `den-issue` file in the git worktree metadata directory (the path from `git rev-parse --git-dir`, then look for a `den-issue` file there). Also check if the `$DEN_TARGET` env var is set or the cwd matches `*-worktrees/*`.
+
+   - **Den-managed**: `den-issue` file exists, OR `$DEN_TARGET` is set, OR cwd matches `*-worktrees/*`. Read the issue number from `den-issue` if present.
+   - **Lite**: None of the above. This is a Claude-managed worktree (created via `EnterWorktree` or manual `git worktree add`).
 
 3. **Completion gates** — check ALL of these before proceeding. If any gate fails, fix it and re-check. Do NOT skip gates or ask the user to skip them.
 
@@ -46,6 +49,8 @@ Mark this worktree as done and ready for cleanup. **This command enforces comple
 
 4. If you found an issue number in step 2, post the summary as a comment on the issue using `gh issue comment <number> --body '...'`. This creates a durable record.
 
-5. Use the Write tool to create an empty file called `.den-done` in the git repo root directory.
+5. **Cleanup — depends on worktree mode.**
 
-6. Display the summary to the user and tell them the worktree is marked done. Tell them to exit this session and run `den prune` from the main repo to clean up.
+   **Den-managed:** Use the Write tool to create an empty file called `.den-done` in the git repo root directory. Display the summary and tell the user to exit this session and run `den prune` from the main repo to clean up.
+
+   **Lite:** Display the summary and tell the user the worktree is done. Tell them to run `ExitWorktree` (or just exit the session) — the worktree will be cleaned up automatically. Do NOT create `.den-done`.

@@ -157,3 +157,15 @@ Passed: N/M
 ```
 
 If any fixture failed, suggest what to investigate (the agent prompt may have drifted, or the fixture expectations need updating).
+
+## When to Add Fixtures
+
+Don't add fixtures speculatively for coverage. Add them in response to observable events:
+
+1. **A prompt change breaks detection.** You modify an agent and later discover it stopped catching something it used to catch. Write a fixture for the missed issue, then fix the prompt. Bug-first, then test.
+
+2. **A false positive pattern recurs.** An agent keeps flagging the same non-issue across multiple PRs (e.g., flagging intentional error suppression in cleanup code). Write a negative fixture asserting it does NOT flag that pattern. The `clean-code` fixture is this type.
+
+3. **A new agent is added.** Every new agent gets at least one positive fixture (known-bad diff it must catch) and one negative fixture (clean diff it must not flag). This is part of the agent creation workflow.
+
+4. **Den JSONL data shows a pattern.** Once den collects review results, look at which agents produce the most rejected findings (false positives) or which finding categories recur. Those are the highest-value new fixtures.

@@ -1,0 +1,17 @@
+{
+  "agent": "comment-analyzer",
+  "description": "Three stale/wrong comments: TTL changed to 15min but docstring still says 24h, ValidateToken comment says 'hex-decode' but implementation uses JWT parse, GenerateToken docstring mentions email/role claims but code only sets sub/iat/exp",
+  "expect_status": ["DONE", "DONE_WITH_CONCERNS"],
+  "expect_findings_min": 2,
+  "expect_findings": [
+    {
+      "severity": "blocking",
+      "file_pattern": "token.go",
+      "description": "Comment says 24 hours but TokenTTL is 15 minutes"
+    },
+    {
+      "file_pattern": "token.go",
+      "description": "ValidateToken comment references hex-decode but implementation uses JWT"
+    }
+  ]
+}

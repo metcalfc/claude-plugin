@@ -1,0 +1,66 @@
+diff --git a/internal/auth/token.go b/internal/auth/token.go
+index 1234567..abcdef0 100644
+--- a/internal/auth/token.go
++++ b/internal/auth/token.go
+@@ -8,15 +8,24 @@ import (
+ 	"time"
+ )
+
+-// TokenTTL is the default token lifetime (24 hours).
+-const TokenTTL = 24 * time.Hour
++// TokenTTL is the default token lifetime (24 hours).
++const TokenTTL = 15 * time.Minute
+
+-// GenerateToken creates a new authentication token for the given user.
+-// Returns the token string and an error if generation fails.
+-// Tokens are valid for 24 hours from creation time.
+-// The token is a hex-encoded random string of 32 bytes.
++// GenerateToken creates a new JWT for the given user.
++// Returns the signed token string and an error if signing fails.
++// Tokens are valid for 24 hours from creation time.
++// The token includes the user's ID, email, and role claims.
+ func GenerateToken(userID string, secret []byte) (string, error) {
+-	b := make([]byte, 32)
+-	if _, err := rand.Read(b); err != nil {
+-		return "", fmt.Errorf("token generation failed: %w", err)
++	now := time.Now()
++	claims := jwt.MapClaims{
++		"sub":   userID,
++		"iat":   now.Unix(),
++		"exp":   now.Add(TokenTTL).Unix(),
+ 	}
+-	return hex.EncodeToString(b), nil
++
++	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
++	signed, err := token.SignedString(secret)
++	if err != nil {
++		return "", fmt.Errorf("token signing failed: %w", err)
++	}
++	return signed, nil
+ }
++
++// ValidateToken checks if a token is valid and returns the user ID.
++// Returns an empty string if the token is invalid or expired.
++// Note: this uses the same hex-decode approach as GenerateToken.
++func ValidateToken(tokenStr string, secret []byte) (string, error) {
++	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
++		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
++			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
++		}
++		return secret, nil
++	})
++	if err != nil {
++		return "", err
++	}
++
++	claims, ok := token.Claims.(jwt.MapClaims)
++	if !ok || !token.Valid {
++		return "", fmt.Errorf("invalid token claims")
++	}
++
++	sub, ok := claims["sub"].(string)
++	if !ok {
++		return "", fmt.Errorf("missing sub claim")
++	}
++	return sub, nil
++}

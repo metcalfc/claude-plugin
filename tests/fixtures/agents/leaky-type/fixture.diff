@@ -1,0 +1,92 @@
+diff --git a/pkg/api/types.go b/pkg/api/types.go
+new file mode 100644
+index 0000000..a1b2c3d
+--- /dev/null
++++ b/pkg/api/types.go
+@@ -0,0 +1,62 @@
++package api
++
++import (
++	"database/sql"
++	"time"
++)
++
++// User represents a user in the public API response.
++type User struct {
++	ID             int            `json:"id"`
++	Name           string         `json:"name"`
++	Email          string         `json:"email"`
++	HashedPassword string         `json:"hashed_password"`
++	Role           string         `json:"role"`
++	CreatedAt      time.Time      `json:"created_at"`
++	UpdatedAt      time.Time      `json:"updated_at"`
++	DeletedAt      sql.NullTime   `json:"deleted_at"`
++	DBConn         *sql.DB        `json:"-"`
++	InternalNotes  string         `json:"internal_notes"`
++}
++
++// Session tracks an active user session.
++type Session struct {
++	ID        string    `json:"id"`
++	UserID    int       `json:"user_id"`
++	Token     string    `json:"token"`
++	IP        string    `json:"ip"`
++	UserAgent string    `json:"user_agent"`
++	ExpiresAt time.Time `json:"expires_at"`
++}
++
++// CreateUserRequest is the payload for creating a new user.
++type CreateUserRequest struct {
++	Name     string `json:"name"`
++	Email    string `json:"email"`
++	Password string `json:"password"`
++	Role     string `json:"role"`
++	IsAdmin  bool   `json:"is_admin"`
++}
++
++// UpdateUserRequest is the payload for updating user fields.
++type UpdateUserRequest struct {
++	Name  *string `json:"name,omitempty"`
++	Email *string `json:"email,omitempty"`
++	Role  *string `json:"role,omitempty"`
++}
++
++// APIResponse wraps all API responses.
++type APIResponse struct {
++	Success bool        `json:"success"`
++	Data    interface{} `json:"data"`
++	Error   string      `json:"error"`
++	Code    int         `json:"code"`
++	Debug   string      `json:"debug"`
++}
++
++// Permission levels for role-based access.
++const (
++	RoleUser    = "user"
++	RoleAdmin   = "admin"
++	RoleMod     = "moderator"
++	RoleSuper   = "super_admin"
++)
+diff --git a/pkg/api/handler.go b/pkg/api/handler.go
+index 1234567..abcdef0 100644
+--- a/pkg/api/handler.go
++++ b/pkg/api/handler.go
+@@ -20,6 +20,18 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
+ 	json.NewEncoder(w).Encode(user)
+ }
+
++// ListUsers returns all users. Requires admin role.
++func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
++	role := r.Context().Value("role").(string)
++	if role != RoleAdmin {
++		http.Error(w, "forbidden", http.StatusForbidden)
++		return
++	}
++
++	users, _ := h.store.ListAll(r.Context())
++	json.NewEncoder(w).Encode(APIResponse{Success: true, Data: users})
++}
++
+ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
+ 	var req CreateUserRequest
+ 	json.NewDecoder(r.Body).Decode(&req)

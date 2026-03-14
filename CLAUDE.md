@@ -179,6 +179,18 @@ All issues go to `metcalfc/claude-plugin`. Labels:
 - Type label: `enhancement` for `/add`, `bug` for `/issue`
 - Issue title prefix: `<plugin-name>: <short summary>`
 
+### Agent Test Fixtures
+
+Review agents have regression tests in `tests/fixtures/agents/`. Each fixture is a directory with `fixture.diff` (known-bad or known-clean diff) and `expect.json` (expected agent behavior). Run with `/chad-tools:test-agents`.
+
+**When to add fixtures** (event-driven, not speculative):
+- A prompt change breaks detection → write fixture for the missed issue, then fix
+- A false positive recurs → write negative fixture asserting it's not flagged
+- A new agent is added → at least one positive + one negative fixture
+- Den JSONL shows a pattern → fixture for the most-rejected finding category
+
+Fixture structure is validated in CI by `tests/validate-plugins.sh`.
+
 ### Audit
 
 `/chad-tools:audit-plugins` runs a review/test cycle across all plugins. When adding a new plugin, update `plugins/chad-tools/commands/audit-plugins.md` to include it.

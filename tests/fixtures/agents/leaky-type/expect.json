@@ -1,0 +1,17 @@
+{
+  "agent": "type-design-analyzer",
+  "description": "Multiple type design issues: User struct exposes HashedPassword and DBConn in public API type, Role is stringly-typed instead of enum, Session exposes raw token, CreateUserRequest has IsAdmin boolean (privilege escalation risk), APIResponse includes Debug field",
+  "expect_status": ["DONE", "DONE_WITH_CONCERNS", "BLOCKED"],
+  "expect_findings_min": 2,
+  "expect_findings": [
+    {
+      "severity": "blocking",
+      "file_pattern": "types.go",
+      "description": "HashedPassword exposed in public API response type"
+    },
+    {
+      "file_pattern": "types.go",
+      "description": "Role field is stringly-typed — should use the defined constants as an enum"
+    }
+  ]
+}

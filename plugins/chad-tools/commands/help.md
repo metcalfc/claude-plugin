@@ -23,6 +23,7 @@ COMMANDS:
   /chad-tools:done           Mark worktree done for cwprune
   /chad-tools:pick-next      Pick next issue and launch worktree
   /chad-tools:resolve        Fix PR review findings, push, resolve threads, verify CI
+  /chad-tools:close-prs      Batch merge PRs with cascade rebase
   /chad-tools:babysit-prs    Rebase conflict-blocked PRs, fix, review, push
   /chad-tools:audit-plugins  Audit all marketplace plugins for accuracy
   /chad-tools:add            Request a new feature (files an issue)

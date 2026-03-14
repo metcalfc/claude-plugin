@@ -19,16 +19,23 @@ Mark this worktree as done and ready for cleanup. **This command enforces comple
 
 3. **Completion gates** — check ALL of these before proceeding. If any gate fails, fix it and re-check. Do NOT skip gates or ask the user to skip them.
 
-   **Gate 1: CI is green.**
+   **Gate 1: Test coverage for new code.**
+   Check if the branch adds new implementation code without corresponding tests. Compare the branch diff against the default branch:
+   ```bash
+   git diff origin/<default-branch>...HEAD --name-only
+   ```
+   Look for new implementation files (`.go`, `.rs`, `.ts`, `.js`, `.py`, `.rb` — excluding generated code, configs, and docs) that add exported functions/methods/types. For each, check whether corresponding test files exist in the diff or already in the repo. If new code has no tests, write the tests before proceeding. Skip this gate only if the branch is purely documentation, configuration, or prompt/markdown changes (no implementation code).
+
+   **Gate 2: CI is green.**
    Run `gh pr checks $(gh pr view --json number --jq .number)` to check CI status. If any check is still running, wait and re-check. If any check has failed, investigate the failure (read the logs with `gh run view <id> --log-failed`), fix the issue, push, and re-check. Do not proceed with a red build.
 
-   **Gate 2: No merge conflicts.**
-   Run `git fetch origin main && git rebase origin/main`. If there are conflicts, resolve them, push the rebased branch, and re-verify CI (gate 1 again).
+   **Gate 3: No merge conflicts.**
+   Run `git fetch origin main && git rebase origin/main`. If there are conflicts, resolve them, push the rebased branch, and re-verify CI (gate 2 again).
 
-   **Gate 3: Review feedback resolved.**
+   **Gate 4: Review feedback resolved.**
    Run `gh api repos/{owner}/{repo}/pulls/{pr}/comments --jq '[.[] | select(.in_reply_to_id == null)] | length'` to check for review comments. If there are unresolved review threads, address every one: fix it, reject it with a reason, or file a tracking issue. Use /resolve-reviews to reply and resolve threads. "Acknowledged" or "will look at later" are not valid dispositions.
 
-   If all gates pass, tell the user: "All gates green — CI passing, no conflicts, reviews resolved."
+   If all gates pass, tell the user: "All gates green — tests covered, CI passing, no conflicts, reviews resolved."
 
 4. Produce a structured summary. Review the work done in this session by looking at the git log for this branch (commits since diverging from the default branch). Organize the summary into these sections:
 

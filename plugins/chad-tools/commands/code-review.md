@@ -105,14 +105,9 @@ Conditionally launch others based on the diff content and changed file names:
   - **Bash/Zsh:** `trap `, `set -e`, `|| true`, `|| :`, `|| exit`, `2>/dev/null`, `|| return`
   - **General:** `on_error`, `errdefer`, `recover`, `panic`
 
-- **`pr-test-analyzer`** — if any changed file matches test patterns:
-  - **Go:** `_test.go`
-  - **Rust:** files in `tests/`, `#[test]`, `#[cfg(test)]`
-  - **JS/TS:** `.test.`, `.spec.`, `__tests__/`, `*.test.ts`, `*.spec.ts`
-  - **Python:** `test_`, `_test.py`, `tests/`, `conftest.py`
-  - **Ruby:** `_spec.rb`, `_test.rb`, `spec/`, `test/`, `minitest`
-  - **Bash:** `.bats`, `test/`
-  - **General:** `fixtures/`, `testdata/`, `mocks/`
+- **`pr-test-analyzer`** — if any changed file matches test patterns OR if new implementation code is added. This agent reviews test quality AND flags missing tests:
+  - **Test files present:** `_test.go`, `tests/`, `#[test]`, `.test.`, `.spec.`, `__tests__/`, `test_`, `_test.py`, `conftest.py`, `_spec.rb`, `_test.rb`, `spec/`, `test/`, `minitest`, `.bats`, `fixtures/`, `testdata/`, `mocks/`
+  - **Implementation without tests:** the diff adds new functions, methods, types, or packages (`.go`, `.rs`, `.ts`, `.js`, `.py`, `.rb` files with `func `, `fn `, `def `, `class `, `function `, `export `) but no corresponding test files appear in the diff. **This is the critical trigger** — the agent must run to flag the gap.
 
 - **`comment-analyzer`** — if the diff adds lines containing doc patterns:
   - **C-style:** `//`, `/*`, `*/`, `///`, `/** `

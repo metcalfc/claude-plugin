@@ -12,7 +12,7 @@
       "name": "chad-tools",
       "description": "Multi-agent code review, AI slop removal, worktree management, and dev workflow automation",
       "source": "./plugins/chad-tools",
-      "version": "1.15.3",
+      "version": "1.16.0",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"

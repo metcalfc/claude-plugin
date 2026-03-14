@@ -31,6 +31,7 @@ Assume the author believed this code was correct. Your job is to find what they 
 - Race conditions, deadlocks, TOCTOU bugs
 - Off-by-one errors, boundary conditions
 - Resource leaks (file handles, connections, memory)
+- **Test coverage**: new exported functions, methods, or types with no corresponding test file or test cases. A PR that adds implementation without tests is incomplete — flag it as blocking. (The `pr-test-analyzer` agent does deep test review; your job is to catch the obvious "zero tests for new code" case.)
 
 ### Architecture (blocking if mismatched)
 - Does it match the project's architecture docs and conventions (from CLAUDE.md)?

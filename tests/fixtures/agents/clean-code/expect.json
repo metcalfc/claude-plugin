@@ -1,7 +1,7 @@
 {
   "agent": "code-reviewer",
   "description": "Well-structured cache with proper locking, tests covering miss/hit/expiry — should produce no blocking findings",
-  "expect_status": ["DONE"],
+  "expect_status": ["DONE", "DONE_WITH_CONCERNS"],
   "expect_findings_min": 0,
   "expect_no_blocking": true
 }

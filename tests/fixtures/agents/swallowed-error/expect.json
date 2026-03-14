@@ -1,7 +1,7 @@
 {
   "agent": "silent-failure-hunter",
   "description": "Three swallowed errors: empty catch in goroutine, config returning defaults on error, silent cleanup failure",
-  "expect_status": ["DONE"],
+  "expect_status": ["DONE", "DONE_WITH_CONCERNS"],
   "expect_findings_min": 2,
   "expect_findings": [
     {

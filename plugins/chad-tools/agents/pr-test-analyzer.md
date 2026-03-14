@@ -103,10 +103,10 @@ Return a status envelope:
 }
 ```
 
-Use `DONE` with an empty findings array if tests look sound.
+Use `DONE` with an empty findings array if tests look sound and coverage is adequate.
 Use `DONE_WITH_CONCERNS` if you completed the review but couldn't verify test coverage against implementation (e.g., implementation file not in diff).
 Use `NEEDS_CONTEXT` if you need to see the implementation code to assess coverage gaps.
-Use `BLOCKED` if the diff contains no test code to review.
+Use `BLOCKED` only if the diff contains neither test code NOR implementation code to assess — i.e., there is truly nothing for you to review (e.g., only config/docs changes). If the diff has implementation code without tests, that's a finding (use `DONE` with blocking findings), not a BLOCKED state.
 
 Rules:
 - Confidence 0-100

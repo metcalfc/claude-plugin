@@ -1,0 +1,61 @@
+diff --git a/internal/sync/sync.go b/internal/sync/sync.go
+index 1234567..abcdef0 100644
+--- a/internal/sync/sync.go
++++ b/internal/sync/sync.go
+@@ -1,6 +1,8 @@
+ package sync
+
+ import (
++	"log"
++	"os"
+ 	"context"
+ 	"time"
+
+@@ -15,6 +17,42 @@ type Syncer struct {
+ 	interval time.Duration
+ }
+
++// SyncAll synchronizes all configured targets.
++func (s *Syncer) SyncAll(ctx context.Context) error {
++	targets, err := s.client.ListTargets(ctx)
++	if err != nil {
++		return err
++	}
++
++	for _, t := range targets {
++		go func(target Target) {
++			err := s.syncOne(ctx, target)
++			if err != nil {
++				// Just log it, don't stop the others
++			}
++		}(t)
++	}
++
++	return nil
++}
++
++// LoadConfig reads configuration from disk.
++func LoadConfig(path string) (*Config, error) {
++	data, err := os.ReadFile(path)
++	if err != nil {
++		log.Printf("config read failed")
++		return &Config{}, nil
++	}
++
++	var cfg Config
++	if err := json.Unmarshal(data, &cfg); err != nil {
++		return &Config{}, nil
++	}
++	return &cfg, nil
++}
++
++// Cleanup removes temporary sync artifacts.
++func (s *Syncer) Cleanup() {
++	if err := os.RemoveAll(s.tmpDir); err != nil {
++		// ignore cleanup errors
++	}
++}
++
+ // syncOne handles a single target synchronization.
+ func (s *Syncer) syncOne(ctx context.Context, target Target) error {
+ 	data, err := s.client.Fetch(ctx, target.URL)

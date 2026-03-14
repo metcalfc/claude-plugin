@@ -1,0 +1,101 @@
+diff --git a/internal/cache/cache.go b/internal/cache/cache.go
+new file mode 100644
+index 0000000..a1b2c3d
+--- /dev/null
++++ b/internal/cache/cache.go
+@@ -0,0 +1,42 @@
++package cache
++
++import (
++	"sync"
++	"time"
++)
++
++// entry holds a cached value with its expiration time.
++type entry struct {
++	value     any
++	expiresAt time.Time
++}
++
++// Cache is a simple in-memory TTL cache.
++type Cache struct {
++	mu      sync.RWMutex
++	entries map[string]entry
++	ttl     time.Duration
++}
++
++// New creates a Cache with the given TTL.
++func New(ttl time.Duration) *Cache {
++	return &Cache{
++		entries: make(map[string]entry),
++		ttl:     ttl,
++	}
++}
++
++// Get retrieves a value. Returns (value, true) on hit, (nil, false) on miss or expiry.
++func (c *Cache) Get(key string) (any, bool) {
++	c.mu.RLock()
++	defer c.mu.RUnlock()
++	e, ok := c.entries[key]
++	if !ok || time.Now().After(e.expiresAt) {
++		return nil, false
++	}
++	return e.value, true
++}
++
++// Set stores a value with the cache's TTL.
++func (c *Cache) Set(key string, value any) {
++	c.mu.Lock()
++	defer c.mu.Unlock()
++	c.entries[key] = entry{value: value, expiresAt: time.Now().Add(c.ttl)}
++}
+diff --git a/internal/cache/cache_test.go b/internal/cache/cache_test.go
+new file mode 100644
+index 0000000..b2c3d4e
+--- /dev/null
++++ b/internal/cache/cache_test.go
+@@ -0,0 +1,44 @@
++package cache
++
++import (
++	"testing"
++	"time"
++)
++
++func TestCache_GetMiss(t *testing.T) {
++	c := New(time.Minute)
++	_, ok := c.Get("nonexistent")
++	if ok {
++		t.Fatal("expected miss for nonexistent key")
++	}
++}
++
++func TestCache_SetAndGet(t *testing.T) {
++	c := New(time.Minute)
++	c.Set("key", "value")
++	got, ok := c.Get("key")
++	if !ok {
++		t.Fatal("expected hit after Set")
++	}
++	if got != "value" {
++		t.Fatalf("got %v, want %q", got, "value")
++	}
++}
++
++func TestCache_Expiry(t *testing.T) {
++	c := New(10 * time.Millisecond)
++	c.Set("key", "value")
++
++	// Should hit immediately
++	if _, ok := c.Get("key"); !ok {
++		t.Fatal("expected hit before expiry")
++	}
++
++	time.Sleep(20 * time.Millisecond)
++
++	// Should miss after TTL
++	_, ok := c.Get("key")
++	if ok {
++		t.Fatal("expected miss after expiry")
++	}
++}

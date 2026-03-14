@@ -1,0 +1,72 @@
+diff --git a/internal/handler/handler.go b/internal/handler/handler.go
+new file mode 100644
+index 0000000..a1b2c3d
+--- /dev/null
++++ b/internal/handler/handler.go
+@@ -0,0 +1,58 @@
++package handler
++
++import (
++	"encoding/json"
++	"fmt"
++	"net/http"
++
++	"example.com/myapp/internal/store"
++)
++
++// Handler manages HTTP request routing and response formatting.
++type Handler struct {
++	store *store.Store
++}
++
++// New creates a new Handler with the given store.
++func New(s *store.Store) *Handler {
++	return &Handler{store: s}
++}
++
++// ListItems returns all items as JSON.
++func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
++	items, err := h.store.GetAll(r.Context())
++	if err != nil {
++		http.Error(w, fmt.Sprintf("failed to list items: %v", err), http.StatusInternalServerError)
++		return
++	}
++
++	w.Header().Set("Content-Type", "application/json")
++	if err := json.NewEncoder(w).Encode(items); err != nil {
++		http.Error(w, "failed to encode response", http.StatusInternalServerError)
++	}
++}
++
++// GetItem returns a single item by ID.
++func (h *Handler) GetItem(w http.ResponseWriter, r *http.Request) {
++	id := r.PathValue("id")
++	if id == "" {
++		http.Error(w, "missing item ID", http.StatusBadRequest)
++		return
++	}
++
++	item, err := h.store.GetByID(r.Context(), id)
++	if err != nil {
++		http.Error(w, fmt.Sprintf("item not found: %v", err), http.StatusNotFound)
++		return
++	}
++
++	w.Header().Set("Content-Type", "application/json")
++	json.NewEncoder(w).Encode(item)
++}
++
++// DeleteItem removes an item by ID.
++func (h *Handler) DeleteItem(w http.ResponseWriter, r *http.Request) {
++	id := r.PathValue("id")
++	if id == "" {
++		http.Error(w, "missing item ID", http.StatusBadRequest)
++		return
++	}
++
++	if err := h.store.Delete(r.Context(), id); err != nil {
++		http.Error(w, fmt.Sprintf("failed to delete: %v", err), http.StatusInternalServerError)
++		return
++	}
++	w.WriteHeader(http.StatusNoContent)
++}

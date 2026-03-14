@@ -295,6 +295,75 @@ for plugin_dir in "$PLUGINS_DIR"/*/; do
   done
 done
 
+# ── Test: Agent test fixtures ────────────────────────────────────────
+
+section "Agent test fixtures"
+
+FIXTURES_DIR="$REPO_ROOT/tests/fixtures/agents"
+if [[ -d "$FIXTURES_DIR" ]]; then
+  for fixture_dir in "$FIXTURES_DIR"/*/; do
+    [[ -d "$fixture_dir" ]] || continue
+    fixture_name="$(basename "$fixture_dir")"
+
+    # Required files
+    if [[ ! -f "$fixture_dir/fixture.diff" ]]; then
+      fail "fixture/$fixture_name: missing fixture.diff"
+    else
+      pass "fixture/$fixture_name: fixture.diff exists"
+    fi
+
+    expect_file="$fixture_dir/expect.json"
+    if [[ ! -f "$expect_file" ]]; then
+      fail "fixture/$fixture_name: missing expect.json"
+      continue
+    else
+      pass "fixture/$fixture_name: expect.json exists"
+    fi
+
+    # Valid JSON
+    if ! jq empty "$expect_file" 2>/dev/null; then
+      fail "fixture/$fixture_name: expect.json is invalid JSON"
+      continue
+    else
+      pass "fixture/$fixture_name: expect.json is valid JSON"
+    fi
+
+    # Required fields
+    agent_name=$(jq -r '.agent // empty' "$expect_file")
+    if [[ -z "$agent_name" ]]; then
+      fail "fixture/$fixture_name: expect.json missing 'agent' field"
+    else
+      pass "fixture/$fixture_name: has 'agent' field ($agent_name)"
+
+      # Agent file must exist
+      agent_file="$PLUGINS_DIR/chad-tools/agents/$agent_name.md"
+      if [[ -f "$agent_file" ]]; then
+        pass "fixture/$fixture_name: agent '$agent_name' exists"
+      else
+        fail "fixture/$fixture_name: references agent '$agent_name' but file not found"
+      fi
+    fi
+
+    # expect_status must be a non-empty array
+    status_count=$(jq '.expect_status | length' "$expect_file" 2>/dev/null)
+    if [[ "$status_count" -gt 0 ]]; then
+      pass "fixture/$fixture_name: has expect_status"
+    else
+      fail "fixture/$fixture_name: expect_status missing or empty"
+    fi
+
+    # Description exists
+    desc=$(jq -r '.description // empty' "$expect_file")
+    if [[ -n "$desc" ]]; then
+      pass "fixture/$fixture_name: has description"
+    else
+      fail "fixture/$fixture_name: missing description"
+    fi
+  done
+else
+  dim "  INFO: no agent test fixtures directory found"
+fi
+
 # ── Test: Behavioral contracts ───────────────────────────────────────
 
 section "Behavioral contracts"

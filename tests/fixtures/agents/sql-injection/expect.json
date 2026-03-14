@@ -1,0 +1,14 @@
+{
+  "agent": "code-reviewer",
+  "description": "Two SQL injection vulnerabilities: fmt.Sprintf with user input in query, and string concatenation in DELETE",
+  "expect_status": ["DONE"],
+  "expect_findings_min": 1,
+  "expect_findings": [
+    {
+      "category": "security",
+      "severity": "blocking",
+      "file_pattern": "queries.go",
+      "description": "SQL injection via string interpolation — user input directly in query string"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "agent": "pr-test-analyzer",
+  "description": "New Go package with 3 exported methods and zero test files — should flag missing tests as blocking",
+  "expect_status": ["DONE", "DONE_WITH_CONCERNS"],
+  "expect_findings_min": 1,
+  "expect_findings": [
+    {
+      "severity": "blocking",
+      "file_pattern": "handler.go",
+      "description": "Missing test coverage for new exported functions"
+    }
+  ]
+}

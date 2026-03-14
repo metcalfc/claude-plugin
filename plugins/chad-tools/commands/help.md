@@ -26,6 +26,7 @@ COMMANDS:
   /chad-tools:close-prs      Batch merge PRs with cascade rebase
   /chad-tools:babysit-prs    Rebase conflict-blocked PRs, fix, review, push
   /chad-tools:audit-plugins  Audit all marketplace plugins for accuracy
+  /chad-tools:test-agents    Self-test review agents against known-bad diff fixtures
   /chad-tools:add            Request a new feature (files an issue)
   /chad-tools:issue          Report a bug (gathers context, you review before filing)
   /chad-tools:help           This help text
@@ -33,7 +34,7 @@ COMMANDS:
 AGENTS (used by review):
   code-reviewer              Security, correctness, architecture, style (always)
   silent-failure-hunter      Swallowed errors, lost context (if error handling in diff)
-  pr-test-analyzer           Test correctness, coverage gaps (if test files in diff)
+  pr-test-analyzer           Test coverage + quality (if tests or new code in diff)
   comment-analyzer           Doc accuracy, misleading comments (if comments in diff)
   type-design-analyzer       Type design, breaking changes (if types in diff)
 

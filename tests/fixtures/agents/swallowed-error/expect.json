@@ -1,0 +1,18 @@
+{
+  "agent": "silent-failure-hunter",
+  "description": "Three swallowed errors: empty catch in goroutine, config returning defaults on error, silent cleanup failure",
+  "expect_status": ["DONE"],
+  "expect_findings_min": 2,
+  "expect_findings": [
+    {
+      "severity": "blocking",
+      "file_pattern": "sync.go",
+      "description": "Empty error handler in goroutine — errors silently discarded"
+    },
+    {
+      "severity": "blocking",
+      "file_pattern": "sync.go",
+      "description": "LoadConfig returns default config on read/parse failure — caller can't distinguish missing config from empty config"
+    }
+  ]
+}

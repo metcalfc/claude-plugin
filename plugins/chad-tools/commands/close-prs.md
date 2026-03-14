@@ -31,7 +31,7 @@ Store as `REPO` and pass `--repo $REPO` to all `gh` commands.
 
 1. Fetch metadata for all specified PRs:
    ```bash
-   gh pr view <number> --repo $REPO --json number,title,headRefName,mergeable,state,reviewDecision,additions,deletions
+   gh pr view <number> --repo $REPO --json number,title,headRefName,baseRefName,mergeable,state,reviewDecision,additions,deletions
    ```
 
 2. Filter out any PRs that are:
@@ -76,8 +76,10 @@ Work through the queue **sequentially**. For each PR:
 ```bash
 gh pr checkout <number> --repo $REPO
 git fetch origin
-git rebase origin/$DEFAULT_BRANCH
+git rebase origin/<baseRefName>
 ```
+
+Use each PR's `baseRefName` from step 1 metadata — not all PRs target the default branch (e.g., stacked PRs).
 
 ### 3b: Fix Conflicts (if any)
 
@@ -93,7 +95,14 @@ If rebase reports conflicts:
 
 If user says "Skip this PR", abort rebase (`git rebase --abort`), move to next PR.
 
-After conflict resolution, push:
+After conflict resolution, review the resolution diff before pushing:
+```bash
+git diff HEAD~1 HEAD
+```
+
+If the conflict resolution touched logic (not just imports/whitespace), show the diff to the user via AskUserQuestion with options: "Looks good, push" / "Let me fix this" / "Skip this PR".
+
+Push:
 ```bash
 git push --force-with-lease
 ```
@@ -107,7 +116,7 @@ gh pr checks <number> --repo $REPO --json name,state,conclusion
 
 Outcomes:
 - **All passing** → proceed to merge
-- **Still pending** after max checks → report "CI still running for #N", ask user: "Wait longer" or "Merge anyway" or "Skip this PR"
+- **Still pending** after max checks → report "CI still running for #N", ask user: "Wait longer" or "Skip this PR"
 - **Failure** → attempt one fix:
   1. Read failing check logs via `gh run view <run-id> --log-failed`
   2. Diagnose and fix

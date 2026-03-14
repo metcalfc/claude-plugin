@@ -263,9 +263,14 @@ Collect and filter results using the same process as Step 5 (status handling, co
 Every filtered finding gets exactly one of three outcomes:
 
 ### Reject
-The finding doesn't apply. State why — the pattern is intentional, the agent misread the
+The finding **doesn't apply**. State why — the pattern is intentional, the agent misread the
 code, or the concern doesn't hold in this context. Rejected findings are NOT posted as
 review comments. Track rejections for the summary (agent name + one-line reason).
+
+**Reject means "wrong", not "inconvenient".** If the finding is valid — even if it's
+non-blocking, architectural, or would take effort to fix — it does not belong in Reject.
+A valid finding MUST go to Fix Now or File Issue. If you're writing "valid concern but..."
+in a rejection reason, stop — that's a File Issue.
 
 ### Fix Now
 The finding is valid. Fix it immediately using Edit/Write tools, regardless of size.
@@ -293,6 +298,7 @@ Use AskUserQuestion to confirm, then file: `gh issue create --repo metcalfc/clau
 - "Skipped" / "nice-to-have" / "too small to fix" — if it's valid, fix it
 - "Pre-existing" — if the file is in the diff, it's in scope
 - "Call out" with no action — don't post a comment you aren't going to address
+- "Valid concern but not blocking" — if it's valid, it's either Fix Now or File Issue. Non-blocking severity does not mean no action required; it means the action doesn't gate the review event type
 
 ### Questions
 Genuine questions about intent or design go through AskUserQuestion before triage.
@@ -455,6 +461,7 @@ Report to the user:
 - **Called out**: count of review comments posted or shown
 - **Questions asked**: note any unresolved questions
 - **Issues filed**: links to any issues created
+- **Rejections**: list each rejection (agent + one-line reason). **Self-check**: scan rejection reasons for phrases like "valid concern", "legitimate issue", "real problem", "should be addressed", or "worth tracking". Any rejection that acknowledges validity is a bug in triage — go back and reclassify it as Fix Now or File Issue before finishing.
 - If PR: what was posted (event type, number of inline comments) + link to PR
 - If no PR: total findings shown
 

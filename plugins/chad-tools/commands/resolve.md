@@ -9,6 +9,7 @@ allowed-tools:
   - Grep
   - Glob
   - Skill
+  - AskUserQuestion
 ---
 
 Fix code issues flagged by PR review comments, push the fixes, verify CI, then delegate to `resolve-reviews` for thread bookkeeping.
@@ -27,7 +28,7 @@ Fix code issues flagged by PR review comments, push the fixes, verify CI, then d
 
 3. Fetch all top-level review comments (these are the findings — exclude reply-to-reply threads):
    ```bash
-   gh api repos/{owner}/{repo}/pulls/{pr}/comments --jq '[.[] | select(.in_reply_to_id == null) | {id: .id, path: .path, line: .line, original_line: .original_line, body: .body, author: .user.login, diff_hunk: .diff_hunk}]'
+   gh api repos/{owner}/{repo}/pulls/{pr}/comments --jq '[.[] | select(.in_reply_to_id == null) | {id: .id, path: .path, line: .line, original_line: .original_line, body: .body, author: .user.login, diff_hunk: .diff_hunk, created_at: .created_at}]'
    ```
 
 4. If there are zero comments, report "No review comments found" and stop.
@@ -107,9 +108,10 @@ Outcomes:
      gh run view <run-id> --log-failed
      ```
   2. Diagnose and fix the issue.
-  3. Commit: `fix: address CI failure from review fixes`
-  4. Push and re-check CI (same polling loop, max 5 checks).
-  5. If CI fails a second time, report "CI still failing after one retry" and continue to Phase 5. Do not loop further.
+  3. Show the fix diff to the user via AskUserQuestion with options: "Looks good, push" / "Let me fix this" before committing.
+  4. Commit: `fix: address CI failure from review fixes`
+  5. Push and re-check CI (same polling loop, max 5 checks).
+  6. If CI fails a second time, report "CI still failing after one retry" and continue to Phase 5. Do not loop further.
 
 ## Phase 5: Delegate to Skill
 

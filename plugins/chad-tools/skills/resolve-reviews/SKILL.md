@@ -4,6 +4,7 @@ description: Reply to GitHub PR review comments explaining how each was
   addressed, then resolve the conversations. Use when the user says
   "address review feedback", "resolve conversations", "reply to review
   comments", or after pushing fixes for PR review findings.
+context: fork
 model: haiku
 ---
 

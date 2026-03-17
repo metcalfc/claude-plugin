@@ -1,5 +1,6 @@
 ---
 name: gh-api-recipes
+context: fork
 description: >-
   This skill should be used when Claude attempts a gh CLI operation
   that fails because the subcommand doesn't exist, when Claude encounters

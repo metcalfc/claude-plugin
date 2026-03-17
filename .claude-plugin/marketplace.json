@@ -12,7 +12,7 @@
       "name": "chad-tools",
       "description": "Multi-agent code review, AI slop removal, worktree management, and dev workflow automation",
       "source": "./plugins/chad-tools",
-      "version": "1.15.4",
+      "version": "1.15.5",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"
@@ -22,7 +22,7 @@
       "name": "exe-dev",
       "description": "exe.dev VM management — SSH CLI, HTTPS API, HTTP proxy, sharing, templates, and Shelley integration",
       "source": "./plugins/exe-dev",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"
@@ -32,7 +32,7 @@
       "name": "gh-recipes",
       "description": "Recipes for gh CLI operations that don't have built-in subcommands (milestones, branch protection, webhooks, etc.)",
       "source": "./plugins/gh-recipes",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"
@@ -62,7 +62,7 @@
       "name": "claude-craft",
       "description": "Claude Code CLI knowledge, plugin management guardrails, and automation recommendations",
       "source": "./plugins/claude-craft",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "category": "development",
       "author": {
         "name": "Chad Metcalf"

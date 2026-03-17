@@ -1,5 +1,6 @@
 ---
 name: exe-dev-knowledge
+context: fork
 description: >-
   This skill should be used when the user mentions "exe.dev", "exe dev",
   "exe VM", "exe.xyz", or any VM lifecycle operation: "create a VM",
